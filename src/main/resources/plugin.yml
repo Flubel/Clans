@@ -1,0 +1,14 @@
+name: Clans
+version: '${project.version}'
+main: tech.flubel.clans.Clans
+api-version: 1.20
+authors: [ MrFiend179 ]
+description: Create Clans for Survival
+commands:
+  clan:
+    description: Clan commands
+    usage: /clan <usage> <clan_name>
+    aliases: [c]
+  cc:
+    description: Sends a message to the clan chat.
+    usage: /cc <message>
