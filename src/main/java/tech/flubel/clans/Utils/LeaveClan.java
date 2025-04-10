@@ -33,7 +33,7 @@ public class LeaveClan {
 
 
                 if (player.getName().equals(leader)) {
-                    player.sendMessage(ChatColor.RED + "Leaders cannot leave the clan. Transfer leadership or disband.");
+                    player.sendMessage(ChatColor.RED + "Leaders cannot leave the clan. Transfer leadership.");
                     return;
                 }
 

@@ -28,3 +28,8 @@ upgrade_slots: 1
 # The cost (in game currency) for each upgrade purchase
 # that increases the max member slots of a clan.
 upgrade_cost: 10000
+
+# -------------------------------------------------------
+# The balance each clan will have upon creation.
+# It is recommended to be half of clan creation amount.
+initial_balance: 25000

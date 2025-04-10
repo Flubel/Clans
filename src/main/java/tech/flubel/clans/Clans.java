@@ -9,18 +9,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.flubel.clans.Utils.*;
+import tech.flubel.clans.metrics.Metrics;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public final class Clans extends JavaPlugin {
+public final class Clans extends JavaPlugin implements Listener {
 
     private Economy economy;
-    private Essentials essentials;
 
     @Override
     public void onEnable() {
@@ -30,15 +33,9 @@ public final class Clans extends JavaPlugin {
             return;
         }
 
-        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
-        if (essentials == null) {
-            getLogger().severe("Essentials not found!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         new CreateClanFolder(this);
 
+        getServer().getPluginManager().registerEvents(this, this);
 
         this.getCommand("clan").setExecutor(this);
         this.getCommand("cc").setExecutor(this);
@@ -46,6 +43,9 @@ public final class Clans extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new ClanPlaceholderExpansion(this).register();
         }
+
+        Metrics metrics = new Metrics(this,25416);
+
 
         saveDefaultConfig();
         getLogger().info("\u001B[38;2;23;138;214m================================================\u001B[0m");
@@ -57,7 +57,7 @@ public final class Clans extends JavaPlugin {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.0                \u001B[0m");
+        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.1                \u001B[0m");
         getLogger().info("\u001B[38;2;0;255;0m                 Plugin Started               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -78,7 +78,7 @@ public final class Clans extends JavaPlugin {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.0                \u001B[0m");
+         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.1                \u001B[0m");
            getLogger().info("\u001B[38;2;255;0;0m                 Plugin Stopped               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -258,16 +258,19 @@ public final class Clans extends JavaPlugin {
                 return true;
             case "help":
                 player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| Clans Help");
-                player.sendMessage(ChatColor.YELLOW + "/clan list" + ChatColor.WHITE + " - List all clans.");
+                player.sendMessage(ChatColor.YELLOW + "/clan top" + ChatColor.WHITE + " - Listranking for all top clans.");
                 player.sendMessage(ChatColor.YELLOW + "/clan create <name>" + ChatColor.WHITE + " - Create a new clan with the specified name.");
                 player.sendMessage(ChatColor.GREEN + "/clan invite <player>" + ChatColor.WHITE + " - Invite a player to your clan.");
-                player.sendMessage(ChatColor.YELLOW + "/clan accept" + ChatColor.WHITE + " - Accept a clan invite.");
-                player.sendMessage(ChatColor.YELLOW + "/clan deny" + ChatColor.WHITE + " - Deny a clan invite.");
+                player.sendMessage(ChatColor.GREEN + "/clan accept" + ChatColor.WHITE + " - Accept a clan invite.");
+                player.sendMessage(ChatColor.GREEN + "/clan deny" + ChatColor.WHITE + " - Deny a clan invite.");
                 player.sendMessage(ChatColor.GREEN + "/clan info" + ChatColor.WHITE + " - View information about the clan you're in.");
                 player.sendMessage(ChatColor.GREEN + "/clan leave" + ChatColor.WHITE + " - Leave your current clan.");
+                player.sendMessage(ChatColor.GREEN + "/clan balance" + ChatColor.WHITE + " - View the total clans balance.");
                 player.sendMessage(ChatColor.GREEN + "/clan promote <player>" + ChatColor.WHITE + " - Promote a clan member.");
                 player.sendMessage(ChatColor.GREEN + "/clan demote <player>" + ChatColor.WHITE + " - Demote a clan member.");
                 player.sendMessage(ChatColor.GREEN + "/clan kick <player>" + ChatColor.WHITE + " - Kick a player from your clan.");
+                player.sendMessage(ChatColor.GREEN + "/clan deposit <amount>" + ChatColor.WHITE + " - Deposits money to clans bank balance.");
+                player.sendMessage(ChatColor.GREEN + "/clan withdraw <amount>" + ChatColor.WHITE + " - Withdraws money from clans bank balance.");
                 player.sendMessage(ChatColor.DARK_GREEN + "/clan transfer <player>" + ChatColor.WHITE + " - Transfer clan leadership to another player.");
                 player.sendMessage(ChatColor.YELLOW + "/clan join <name>" + ChatColor.WHITE + " - Request to join a clan.");
                 player.sendMessage(ChatColor.GREEN + "/clan raccept <player>" + ChatColor.WHITE + " - Accept a player's request to join the clan.");
@@ -276,17 +279,104 @@ public final class Clans extends JavaPlugin {
                 player.sendMessage(ChatColor.GREEN + "/clan home" + ChatColor.WHITE + " - Teleport to the clan home.");
                 player.sendMessage(ChatColor.GREEN + "/clan requests" + ChatColor.WHITE + " - View pending requests to join your clan.");
                 player.sendMessage(ChatColor.GREEN + "/clan upgrade" + ChatColor.WHITE + " - Upgrades the clan player slot.");
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan pvp" + ChatColor.WHITE + " - Toggles pvp between clan members.");
                 player.sendMessage(ChatColor.RED + "/clan reload" + ChatColor.WHITE + " - Reload the plugin configuration.");
                 return true;
             case "pinfo":
                 player.sendMessage(ChatColor.YELLOW + "Made at Flubel by Fiend.");
-                player.sendMessage(ChatColor.YELLOW + "Version: 1.0.0");
+                player.sendMessage(ChatColor.YELLOW + "Version: 1.1.0");
+                return true;
+            case "deposit":
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED + "Usage: /clan deposit <amount>");
+                    return true;
+                }
+
+                int amount;
+                try {
+                    amount = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Please enter a valid number.");
+                    return true;
+                }
+
+                ClanBankDeposit clanBankDeposit = new ClanBankDeposit(this, this.economy);
+                clanBankDeposit.BankClanDep(player, amount);
+                return true;
+            case "withdraw":
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED + "Usage: /clan withdraw <amount>");
+                    return true;
+                }
+
+                int amount1;
+                try {
+                    amount1 = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Please enter a valid number.");
+                    return true;
+                }
+
+                ClanBankWithdraw clanBankWithdraw = new ClanBankWithdraw(this, this.economy);
+                clanBankWithdraw.withdrawFromClan(player, amount1);
+                return true;
+            case "pvp":
+                ClanPvPToggle clanPvPToggle = new ClanPvPToggle(this);
+                clanPvPToggle.pvptoggler(player);
+                return true;
+            case "balance":
+                ClanBalanceViewer clanBalanceViewer = new ClanBalanceViewer(this);
+                clanBalanceViewer.balanceviewer(player);
                 return true;
         }
 
 
         return true;
     }
+
+
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player)) return;
+
+        Player victim = (Player) event.getEntity();
+        Player attacker = (Player) event.getDamager();
+
+        String victimClan = getClanName(victim);
+        String attackerClan = getClanName(attacker);
+
+        if (victimClan == null || !victimClan.equals(attackerClan)) return;
+
+        File clansFile = new File(this.getDataFolder(), "clans.yml");
+        FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
+
+        boolean pvpEnabled = clansConfig.getBoolean("clans." + victimClan + ".pvp");
+
+        if (!pvpEnabled) {
+            event.setCancelled(true);
+            attacker.sendMessage(ChatColor.RED + "PvP is disabled between clan members.");
+            victim.sendMessage(ChatColor.RED + attacker.getName() + " tried to attack you but clan pvp is disabled.");
+        }
+    }
+
+    private String getClanName(Player player) {
+        File clansFile = new File(this.getDataFolder(), "clans.yml");
+        FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
+
+        if (!clansConfig.contains("clans")) return null;
+
+        for (String clanName : clansConfig.getConfigurationSection("clans").getKeys(false)) {
+            if (clansConfig.getString("clans." + clanName + ".leader").equals(player.getName()) ||
+                    clansConfig.getStringList("clans." + clanName + ".co_leader").contains(player.getName()) ||
+                    clansConfig.getStringList("clans." + clanName + ".members").contains(player.getName())) {
+                return clanName;
+            }
+        }
+        return null;
+    }
+
+
     public void createClan(Player player, String clanName) {
         double requiredBalance = this.getConfig().getDouble("Amount", 50000.0);
 
@@ -327,6 +417,8 @@ public final class Clans extends JavaPlugin {
         clansConfig.set("clans." + cleanedClanName + ".co_leader", new ArrayList<>());
         clansConfig.set("clans." + cleanedClanName + ".members", new ArrayList<>());
         clansConfig.set("clans." + cleanedClanName + ".prefix", clanName);
+        clansConfig.set("clans." + cleanedClanName + ".pvp", true);
+        clansConfig.set("clans." + cleanedClanName + ".balance", this.getConfig().getInt("initial_balance",25000));
         clansConfig.set("clans." + cleanedClanName + ".max_members", this.getConfig().getInt("max_members",50));
 
         try {
