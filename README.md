@@ -35,3 +35,8 @@ To build the plugin from source, use one of the following methods:
 
 ## Wiki
 To learn more about the plugin visit the repository's wiki.
+
+# Downloads
+* [SpigotMc](https://www.spigotmc.org/resources/clans.123903/)
+* [Mondrith](https://modrinth.com/plugin/simple-clans)
+* [Hangar](https://hangar.papermc.io/MrFiend/Clans)
