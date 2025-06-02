@@ -57,7 +57,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.1                \u001B[0m");
+        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.2                \u001B[0m");
         getLogger().info("\u001B[38;2;0;255;0m                 Plugin Started               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -78,7 +78,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.1                \u001B[0m");
+         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.2                \u001B[0m");
            getLogger().info("\u001B[38;2;255;0;0m                 Plugin Stopped               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -284,7 +284,7 @@ public final class Clans extends JavaPlugin implements Listener {
                 return true;
             case "pinfo":
                 player.sendMessage(ChatColor.YELLOW + "Made at Flubel by Fiend.");
-                player.sendMessage(ChatColor.YELLOW + "Version: 1.1.0");
+                player.sendMessage(ChatColor.YELLOW + "Version: 1.2.0");
                 return true;
             case "deposit":
                 if (args.length < 2) {

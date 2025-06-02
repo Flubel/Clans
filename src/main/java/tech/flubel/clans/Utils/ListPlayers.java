@@ -73,7 +73,7 @@ public class ListPlayers {
 
         // Show total players
         int maxmembersclan = clansConfig.getInt("clans." + clanName + ".max_members");
-        formattedMessage.append(ChatColor.GOLD + "Total Members: (").append(ChatColor.WHITE + String.valueOf(totalPlayers) + maxmembersclan + ")\n");
+        formattedMessage.append(ChatColor.GOLD + "Total Members: (").append(ChatColor.WHITE + String.valueOf(totalPlayers) + "/" + maxmembersclan + ChatColor.GOLD + ")\n");
 
         return formattedMessage.toString();
     }

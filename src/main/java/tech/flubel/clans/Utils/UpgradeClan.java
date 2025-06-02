@@ -40,6 +40,10 @@ public class UpgradeClan {
             return;
         }
         int requiredBalance = plugin.getConfig().getInt("upgrade_cost", 10000);
+        if (economy.getBalance(player) < requiredBalance) {
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + "You don't have enough money to Upgrade your Clan.");
+            return;
+        }
         int slotsUp = plugin.getConfig().getInt("upgrade_slots", 1);
 
         economy.withdrawPlayer(player, requiredBalance);
