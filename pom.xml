@@ -6,7 +6,7 @@
 
     <groupId>tech.flubel</groupId>
     <artifactId>Clans</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>Clans</name>
@@ -48,7 +48,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
             </resource>
         </resources>
 

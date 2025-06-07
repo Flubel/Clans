@@ -5,15 +5,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Promote {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public Promote(JavaPlugin plugin) {
+    public Promote(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void promotePlayer(Player leader, String targetName) {
@@ -23,8 +28,8 @@ public class Promote {
         FileConfiguration config = YamlConfiguration.loadConfiguration(clansFile);
 
         // Check if the clan exists
-        if (!config.contains("clans." + clanName)) {
-            leader.sendMessage(ChatColor.RED + "Clan " + clanName + " does not exist.");
+        if (clanName == null) {
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("promote.no-clan"));
             return;
         }
 
@@ -35,19 +40,24 @@ public class Promote {
 
         // Check if the leader is promoting the target player
         if (!leader.getName().equals(leaderName)) {
-            leader.sendMessage(ChatColor.RED + "Only the leader can promote players.");
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("promote.no-auth"));
             return;
         }
 
         // Check if the target player is a member
         if (!members.contains(targetName)) {
-            leader.sendMessage(ChatColor.RED + targetName + " is not a member of the clan.");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("promote.no-member", placeholders));
             return;
         }
 
         // Check if the player is already a co-leader
         if (coLeaders.contains(targetName)) {
-            leader.sendMessage(ChatColor.YELLOW + targetName + " is already a co_leader.");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+            leader.sendMessage(ChatColor.YELLOW +""+ ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("promote.already-promoted", placeholders));
             return;
         }
 
@@ -61,9 +71,13 @@ public class Promote {
 
         try {
             config.save(clansFile);
-            leader.sendMessage(ChatColor.GREEN + "Successfully promoted " + targetName + " to CoLeader.");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            leader.sendMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("promote.success", placeholders));
         } catch (Exception e) {
-            leader.sendMessage(ChatColor.RED + "Error promoting the player.");
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("promote.error"));
             e.printStackTrace();
         }
     }

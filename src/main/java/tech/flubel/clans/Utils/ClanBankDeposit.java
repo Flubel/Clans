@@ -7,36 +7,41 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClanBankDeposit {
     private final JavaPlugin plugin;
     private final Economy economy;
+    private final LanguageManager languageManager;
 
-    public ClanBankDeposit(JavaPlugin plugin, Economy economy) {
+    public ClanBankDeposit(JavaPlugin plugin, Economy economy, LanguageManager languageManager) {
         this.plugin = plugin;
         this.economy = economy;
+        this.languageManager = languageManager;
     }
 
     public void BankClanDep(Player player, int amount) {
 
         if (amount <= 0) {
-            player.sendMessage(ChatColor.RED + "Amount must be greater than zero.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("bank.deposit.amount"));
             return;
         }
 
         if (economy.getBalance(player) < amount) {
-            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + "You don't have enough money to Deposit");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("bank.deposit.no-bal"));
             return;
         }
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan!");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("bank.no-clan"));
             return;
         }
 
@@ -54,7 +59,12 @@ public class ClanBankDeposit {
         for (String memberName : clanMembers) {
             Player member = Bukkit.getPlayer(memberName);
             if (member != null && member.isOnline()) {
-                member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + player.getName() +" deposited " + amount + " to clan's balance.");
+
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("player", player.getName());
+                placeholders.put("amount", String.valueOf(amount));
+
+                member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + languageManager.get("bank.deposit.success", placeholders));
             }
         }
 
@@ -62,7 +72,7 @@ public class ClanBankDeposit {
             clansConfig.save(clansFile);
         } catch (IOException e) {
             e.printStackTrace();
-            player.sendMessage("An error occurred while saving the clan.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("bank.deposit.error"));
             return;
         }
 

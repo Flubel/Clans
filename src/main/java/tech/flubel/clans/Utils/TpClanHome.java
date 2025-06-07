@@ -6,15 +6,18 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 
 public class TpClanHome {
 
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public TpClanHome(JavaPlugin plugin) {
+    public TpClanHome(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void teleportToClanHome(Player player) {
@@ -22,7 +25,7 @@ public class TpClanHome {
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan!");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_home.no-clan"));
             return; // Stop execution if the player is not in a clan
         }
 
@@ -32,7 +35,7 @@ public class TpClanHome {
 
         // Check if the clan has a home set
         if (!clansConfig.contains("clans." + clanName + ".home")) {
-            player.sendMessage(ChatColor.RED + "This clan does not have a home set.");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_home.no-home"));
             return;
         }
 
@@ -46,7 +49,7 @@ public class TpClanHome {
 
         // Check if the world is valid and exists
         if (plugin.getServer().getWorld(worldName) == null) {
-            player.sendMessage(ChatColor.RED + "The world for this clan home is not loaded.");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_home.no-world"));
             return;
         }
 
@@ -55,7 +58,7 @@ public class TpClanHome {
 
         // Teleport the player to the clan home location
         player.teleport(homeLocation);
-        player.sendMessage(ChatColor.GREEN + "You have been teleported to your clan's home.");
+        player.sendMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("clan_home.success-tp"));
     }
 
     // Method to get the player's clan name

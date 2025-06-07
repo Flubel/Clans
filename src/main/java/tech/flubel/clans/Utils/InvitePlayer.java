@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,9 +18,11 @@ public class InvitePlayer {
 
 
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public InvitePlayer(JavaPlugin plugin) {
+    public InvitePlayer(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
     public void sendInvite(Player inviter, String invitedPlayerName) {
 
@@ -27,14 +30,14 @@ public class InvitePlayer {
         FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
         String clanName = getClanName(inviter);
         if (clanName == null || clanName.isEmpty()) {
-            inviter.sendMessage(ChatColor.RED + "You must be in a clan to invite players!");
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.no-clan"));
             return;
         }
 
 
         if (!clansConfig.getString("clans." + clanName + ".leader").equals(inviter.getName()) &&
                 !clansConfig.getStringList("clans." + clanName + ".co_leader").contains(inviter.getName())) {
-            inviter.sendMessage(ChatColor.RED + "You must be a leader or co-leader of your clan to invite players!");
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.no-auth"));
             return;
         }
 
@@ -43,17 +46,21 @@ public class InvitePlayer {
         Player invitedPlayer = Bukkit.getPlayer(invitedPlayerName);
 
         if (invitedPlayer == null) {
-            inviter.sendMessage(ChatColor.RED + "Player " + invitedPlayerName + " is not online!");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", invitedPlayerName);
+
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.not-online", placeholders));
             return;
         }
         if (getClanName(invitedPlayer) != null) {
-            inviter.sendMessage(ChatColor.RED + "Player is already in a clan.");
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.in-clan"));
             return;
         }
 
 
         if(Objects.equals(invitedPlayer.getName(), inviter.getName())){
-            inviter.sendMessage(ChatColor.RED + "You can not invite yourself to the clan you are in Duck head");
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.one-self"));
             return;
         }
 
@@ -61,7 +68,7 @@ public class InvitePlayer {
         int currentMembers = memberCount.getClanMembersCount(clanName);
 
         if(currentMembers >= clansConfig.getInt("clans." + clanName + ".max_members")){
-            inviter.sendMessage(ChatColor.RED + "Clan is Full.");
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.clan-full"));
             return;
         }
 
@@ -71,7 +78,11 @@ public class InvitePlayer {
             || clansConfig.getStringList("clans." + clanName + ".co_leader").contains(invitedPlayer.getName())
                 || clansConfig.getString("clans." + clanName + ".leader").equals(invitedPlayer.getName())
         )  {
-            inviter.sendMessage(ChatColor.RED + invitedPlayerName + " is already a member of your clan!");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", invitedPlayerName);
+
+            inviter.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.already-member", placeholders));
             return;
         }
 
@@ -99,12 +110,22 @@ public class InvitePlayer {
         }
 
 
-        inviter.sendMessage(ChatColor.GREEN + "Invite send Successfully!");
+        inviter.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("invite.success"));
 
         String prefix = clansConfig.getString("clans." + clanName + ".prefix");
         String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', prefix);
-        invitedPlayer.sendMessage(ChatColor.GREEN + "You are invited to clan " + TranslatedClanName + ChatColor.GREEN + " by " + inviter.getName());
-        invitedPlayer.sendMessage(ChatColor.YELLOW + "Type /clan accept to accept or /clan deny to reject the invitation.");
+
+
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("clan_name", TranslatedClanName);
+        placeholders.put("inviter", inviter.getName());
+
+        String message = languageManager.get("invite.invited-msg", placeholders);
+        message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+
+
+        invitedPlayer.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
+        invitedPlayer.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("invite.invited-actions"));
 
 
 
@@ -113,7 +134,7 @@ public class InvitePlayer {
             InvitesConfig.set("invites." + invitedPlayerName, null);
             try {
                 InvitesConfig.save(invitationsFile);
-                invitedPlayer.sendMessage(ChatColor.RED + "Your clan invite has expired.");
+                invitedPlayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.expired"));
             } catch (IOException e) {
                 plugin.getLogger().severe("Could not save invites file after expiration: " + e.getMessage());
             }
@@ -142,7 +163,7 @@ public class InvitePlayer {
 
         String Inviter = InvitesConfig.getString("invites." + invitedplayer.getName());
         if(Inviter == null){
-            invitedplayer.sendMessage(ChatColor.RED + " You don't have any pending clan invites.");
+            invitedplayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.null-invited"));
             return;
         }
 
@@ -150,7 +171,7 @@ public class InvitePlayer {
 
         plugin.getLogger().info(clannam);
 
-        AddPlayer addPlayer = new AddPlayer(plugin);
+        AddPlayer addPlayer = new AddPlayer(plugin, languageManager);
         addPlayer.PlayerAdder(clannam,invitedplayer);
         InvitesConfig.set("invites." + invitedplayer.getName() , null);
     }
@@ -161,13 +182,17 @@ public class InvitePlayer {
 
         String Inviter = InvitesConfig.getString("invites." + invitedplayer.getName());
         if(Inviter == null){
-            invitedplayer.sendMessage(ChatColor.RED + " You don't have any pending clan invites.");
+            invitedplayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.null-invited"));
             return;
         }
         Player inviter = Bukkit.getPlayer(Inviter);
 
-        inviter.sendMessage(ChatColor.RED +""+ChatColor.BOLD + "| "+ ChatColor.RED +"Player " + invitedplayer.getName() + " has rejected your clan Invite.");
-        invitedplayer.sendMessage(ChatColor.RED +""+ChatColor.BOLD + "| "+ ChatColor.RED + "Clan Invite rejected.");
+
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("player", invitedplayer.getName());
+
+        inviter.sendMessage(ChatColor.RED +""+ChatColor.BOLD + "| "+ ChatColor.RED + languageManager.get("invite.reject-invite", placeholders));
+        invitedplayer.sendMessage(ChatColor.RED +""+ChatColor.BOLD + "| "+ ChatColor.RED + languageManager.get("invite.reject-invite-player"));
 
         InvitesConfig.set("invites." + invitedplayer.getName() , "null");
     }

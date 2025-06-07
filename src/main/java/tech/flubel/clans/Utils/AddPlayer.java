@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,9 +14,11 @@ import java.util.Map;
 
 public class AddPlayer {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public AddPlayer(JavaPlugin plugin) {
+    public AddPlayer(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
 
@@ -29,7 +32,7 @@ public class AddPlayer {
         int currentMembers = memberCount.getClanMembersCount(clanName);
 
         if(currentMembers >= clansConfig.getInt("clans." + clanName + ".max_members")){
-            player.sendMessage(ChatColor.RED + "Clan is Full.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("add.full"));
             membersList.remove(player.getName());
             clansConfig.set("clans." + clanName + ".members", membersList);
             return;
@@ -45,13 +48,21 @@ public class AddPlayer {
 
                 String prefix = clansConfig.getString("clans." + clanName + ".prefix");
                 String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', prefix);
-                player.sendMessage(ChatColor.GREEN + "You have joined the clan " + TranslatedClanName +ChatColor.GREEN + "!");
+
+
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("clan_name", TranslatedClanName);
+
+                String message = languageManager.get("add.success", placeholders);
+                message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+
+                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
             } catch (Exception e) {
-                player.sendMessage(ChatColor.RED + "An error occurred while adding you to the clan.");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("add.error"));
                 e.printStackTrace();
             }
         } else {
-            player.sendMessage(ChatColor.YELLOW + "You are already a member of the clan " + clanName + "!");
+            player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("add.alr-mem"));
         }
     }
 

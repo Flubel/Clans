@@ -6,16 +6,21 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TransferLeadership {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public TransferLeadership(JavaPlugin plugin) {
+    public TransferLeadership(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void transferLeadership(Player leader, String targetName) {
@@ -24,7 +29,7 @@ public class TransferLeadership {
 
         String clanName = getClanName(leader);
         if (clanName == null) {
-            leader.sendMessage(ChatColor.RED + "You are not in a clan.");
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("transfer.no-clan"));
             return;
         }
 
@@ -35,13 +40,17 @@ public class TransferLeadership {
 
         // Check if the current player is the leader
         if (!leader.getName().equals(currentLeader)) {
-            leader.sendMessage(ChatColor.RED + "Only the current leader can transfer leadership.");
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("transfer.leader-req"));
             return;
         }
 
         // Check if the target player is in the clan (either a member or co-leader)
         if (!members.contains(targetName) && !coLeaders.contains(targetName)) {
-            leader.sendMessage(ChatColor.RED + targetName + " is not a valid member or co-leader in your clan.");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("transfer.not-member", placeholders));
             return;
         }
 
@@ -68,22 +77,39 @@ public class TransferLeadership {
 
             String prefix = config.getString("clans." + clanName + ".prefix");
             String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', prefix);
-            target.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "|" + ChatColor.GREEN + " You are now the leader of Clan " + TranslatedClanName + ChatColor.GREEN +  ".");
+
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("clan_name", TranslatedClanName);
+
+            String message = languageManager.get("transfer.success-new-leader", placeholders);
+            message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+
+            target.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
         }
 
 
         for (String memberName : clanMembers) {
             Player member = Bukkit.getPlayer(memberName);
             if (member != null && member.isOnline()) {
-                member.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "|" + ChatColor.GREEN +
-                        " Clan leadership has been transferred to " + ChatColor.BOLD + targetName + ChatColor.GREEN + ".");
+
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("player", targetName);
+
+                String message = languageManager.get("transfer.success-members", placeholders);
+
+                member.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
             }
         }
         try {
             config.save(clansFile);
-            leader.sendMessage(ChatColor.GREEN + "You have successfully transferred leadership to " + targetName + ".");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("new_leader", targetName);
+
+            leader.sendMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("transfer.success-old-leader"));
         } catch (Exception e) {
-            leader.sendMessage(ChatColor.RED + "Error transferring leadership.");
+            leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " +  ChatColor.RED + languageManager.get("transfer.error"));
             e.printStackTrace();
         }
     }

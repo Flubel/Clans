@@ -5,23 +5,28 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClanPvPToggle {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public ClanPvPToggle(JavaPlugin plugin) {
+    public ClanPvPToggle(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void pvptoggler(Player player){
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan!");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.no-clan"));
             return;
         }
 
@@ -30,7 +35,7 @@ public class ClanPvPToggle {
 
 
         if (!clansConfig.getString("clans." + clanName + ".leader").equals(player.getName())) {
-            player.sendMessage(ChatColor.RED + "Only Leaders can toggle pvp between clan members.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.no-auth"));
             return;
         }
         boolean currentState = clansConfig.getBoolean("clans." + clanName + ".pvp", true);
@@ -40,7 +45,7 @@ public class ClanPvPToggle {
             clansConfig.save(clansFile);
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + "Error saving PvP toggle state.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.error"));
             return;
         }
 
@@ -49,7 +54,10 @@ public class ClanPvPToggle {
         for (String memberName : getClanMembers(clanName)) {
             Player member = plugin.getServer().getPlayer(memberName);
             if (member != null && member.isOnline()) {
-                member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + "Clan PvP has been " + status + " by your leader.");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("status", status);
+
+                member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + languageManager.get("clan_pvp.success", placeholders));
             }
         }
 

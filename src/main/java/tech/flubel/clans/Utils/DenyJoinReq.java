@@ -6,15 +6,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DenyJoinReq {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public DenyJoinReq(JavaPlugin plugin) {
+    public DenyJoinReq(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void denyRequest(Player denier, String targetName) {
@@ -25,7 +30,7 @@ public class DenyJoinReq {
         String targetLower = targetName.toLowerCase();
 
         if (!clansConfig.contains("clans")) {
-            denier.sendMessage(ChatColor.RED + "There are no clans.");
+            denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.no-clan"));
             return;
         }
 
@@ -48,26 +53,39 @@ public class DenyJoinReq {
                     try {
                         requestsConfig.save(requestsFile);
                     } catch (Exception e) {
-                        denier.sendMessage(ChatColor.RED + "Failed to update join request file.");
+                        denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.failure"));
                         e.printStackTrace();
                         return;
                     }
 
-                    denier.sendMessage(ChatColor.YELLOW + "You have denied " + targetName + "'s request to join " + clanName + ".");
+
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("player", targetName);
+
+                    denier.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("invite.deny.denier-msg", placeholders));
 
                     Player target = Bukkit.getPlayer(targetName);
                     if (target != null && target.isOnline()) {
-                        target.sendMessage(ChatColor.RED + "Your request to join " + clanName + " has been denied.");
+                        Map<String, String> placeholders1 = new HashMap<>();
+                        placeholders1.put("clan_name", clanName);
+                        placeholders1.put("denier", denier.getName());
+
+                        target.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.denied-msg", placeholders1));
                     }
 
                     return;
                 } else {
-                    denier.sendMessage(ChatColor.RED + targetName + " has not requested to join your clan.");
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("player", targetName);
+
+                    denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.no-req", placeholders));
                     return;
                 }
+            } else {
+                denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.no-auth"));
             }
         }
 
-        denier.sendMessage(ChatColor.RED + "You are not a leader or co-leader of any clan.");
+        denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.no-auth-any"));
     }
 }

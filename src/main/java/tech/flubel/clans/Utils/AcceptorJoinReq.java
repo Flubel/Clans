@@ -6,16 +6,22 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.Clans;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AcceptorJoinReq {
-    private final JavaPlugin plugin;
+    private final Clans plugin;
+    private final LanguageManager languageManager;
 
-    public AcceptorJoinReq(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public AcceptorJoinReq(JavaPlugin plugin, LanguageManager languageManager) {
+        this.plugin = (Clans) plugin;
+        this.languageManager = languageManager;
     }
 
     public void acceptJoinRequest(Player staff, String targetName) {
@@ -40,21 +46,29 @@ public class AcceptorJoinReq {
         }
 
         if (targetClan == null) {
-            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "You are not a leader or co-leader of any clan.");
+            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.no-clan"));
+
             return;
         }
 
         // Check if the request exists
         List<String> requests = reqConfig.getStringList("requests." + targetClan);
         if (!requests.contains(targetName)) {
-            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "No join request found from player " + targetName + ".");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.no-req", placeholders));
+
             return;
         }
 
         // Check if the player is online
         Player targetPlayer = Bukkit.getPlayer(targetName);
         if (targetPlayer == null || !targetPlayer.isOnline()) {
-            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + targetName + " is not online.");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.not-online", placeholders));
             return;
         }
 
@@ -65,7 +79,10 @@ public class AcceptorJoinReq {
             List<String> coLeaders = clanConfig.getStringList("clans." + clan + ".co_leader");
 
             if (leader.equals(targetName) || members.contains(targetName) || coLeaders.contains(targetName)) {
-                staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE +  targetName + " is already in a clan.");
+
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("player", targetName);
+                staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED +  languageManager.get("invite.accept.alr-clan", placeholders));
                 return;
             }
         }
@@ -74,8 +91,8 @@ public class AcceptorJoinReq {
         int currentMembers = memberCount.getClanMembersCount(targetClan);
 
         if(currentMembers >= clanConfig.getInt("clans." + targetClan + ".max_members")){
-            staff.sendMessage(ChatColor.RED + "Clan is Full.");
-            targetPlayer.sendMessage(ChatColor.RED + "Invite denied as clan is Full.");
+            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.full"));
+            targetPlayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.full-player"));
             requests.remove(targetName);
             reqConfig.set("requests." + targetClan, requests);
             return;
@@ -94,14 +111,27 @@ public class AcceptorJoinReq {
             clanConfig.save(clanFile);
             reqConfig.save(requestsFile);
         } catch (IOException e) {
-            staff.sendMessage(ChatColor.RED + "Error saving data.");
+            staff.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.accept.error"));
             e.printStackTrace();
             return;
         }
 
-        staff.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.WHITE +  "You accepted " + targetName + "'s request to join the clan.");
+
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("player", targetName);
+
+        staff.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("invite.accept.success", placeholders));
         String prefix = clanConfig.getString("clans." + targetClan + ".prefix");
         String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', prefix);
-        targetPlayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "You have been accepted into the clan " + TranslatedClanName + ChatColor.WHITE + "!");
+
+
+        Map<String, String> placeholders1 = new HashMap<>();
+        placeholders1.put("clan_name", TranslatedClanName);
+
+        String message = languageManager.get("invite.accept.success-mem", placeholders1);
+        message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+
+
+        targetPlayer.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
     }
 }

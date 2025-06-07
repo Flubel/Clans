@@ -33,3 +33,8 @@ upgrade_cost: 10000
 # The balance each clan will have upon creation.
 # It is recommended to be half of clan creation amount.
 initial_balance: 25000
+
+# -------------------------------------------------------
+# The language the plugin will use.
+# Supported Languages Chinese (cn), Dutch (de), English (en) [Default], French (fr), Russian (ru), Turkish (tr)
+language: en

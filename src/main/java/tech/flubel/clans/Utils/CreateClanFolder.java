@@ -1,5 +1,7 @@
 package tech.flubel.clans.Utils;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -13,6 +15,7 @@ public class CreateClanFolder {
         this.plugin = plugin;
         createFolders();
     }
+
     private void createFolders() {
         File pluginFolder = plugin.getDataFolder();
         if (!pluginFolder.exists()) {
@@ -23,10 +26,13 @@ public class CreateClanFolder {
         if (!clansFile.exists()) {
             try {
                 clansFile.createNewFile();
-                if (clansFile.length() == 0) {
-                    plugin.getConfig().createSection("clans");
-                    plugin.getConfig().save(clansFile);
-                }
+
+                // Create an empty clans.yml with "clans:" section
+                FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
+                clansConfig.createSection("clans");
+                clansConfig.save(clansFile);
+
+
             } catch (IOException e) {
                 plugin.getLogger().severe("Could not create clans.yml file: " + e.getMessage());
             }

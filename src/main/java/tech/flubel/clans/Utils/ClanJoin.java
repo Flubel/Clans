@@ -6,15 +6,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClanJoin {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public ClanJoin(JavaPlugin plugin) {
+    public ClanJoin(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
 //    public void requestJoinClan(Player player, String clanName) {
@@ -90,7 +95,7 @@ public class ClanJoin {
 
         // Check if clan exists
         if (!config.contains("clans." + clanName)) {
-            player.sendMessage(ChatColor.RED + "Clan " + clanName + " does not exist.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join.no-clan"));
             return;
         }
 
@@ -101,7 +106,7 @@ public class ClanJoin {
             String leader = config.getString("clans." + existingClan + ".leader");
 
             if (members.contains(player.getName()) || coLeaders.contains(player.getName()) || leader.equals(player.getName())) {
-                player.sendMessage(ChatColor.RED + "You are already in a clan.");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join.already-member"));
                 return;
             }
         }
@@ -110,7 +115,7 @@ public class ClanJoin {
         int currentMembers = memberCount.getClanMembersCount(clanName);
 
         if(currentMembers >= config.getInt("clans." + clanName + ".max_members")){
-            player.sendMessage(ChatColor.RED + "Clan is Full.");
+            player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW +  languageManager.get("join.full"));
             return;
         }
 
@@ -145,22 +150,31 @@ public class ClanJoin {
         String leader = config.getString("clans." + clanName + ".leader");
         List<String> coLeaders = config.getStringList("clans." + clanName + ".co_leader");
 
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("player", player.getName());
+
         Player leaderPlayer = Bukkit.getPlayer(leader);
         if (leaderPlayer != null && leaderPlayer.isOnline()) {
-            leaderPlayer.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + player.getName() + " wants to join your clan: " + clanName);
+            leaderPlayer.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("join.join-req", placeholders));
         }
 
         for (String co : coLeaders) {
             Player coPlayer = Bukkit.getPlayer(co);
             if (coPlayer != null && coPlayer.isOnline()) {
-                coPlayer.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + player.getName() + " wants to join your clan: " + clanName);
+                coPlayer.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("join.join-req", placeholders));
             }
         }
 
         String prefix = config.getString("clans." + clanName + ".prefix");
         String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', prefix);
 
-        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + "Join request sent to the clan " + TranslatedClanName + "'s" + ChatColor.GREEN +" leader and co-leaders.");
+        Map<String, String> placeholders1 = new HashMap<>();
+        placeholders1.put("clan_name", TranslatedClanName);
+
+        String message = languageManager.get("join.success", placeholders1);
+        message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+
+        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
     }
 
 }

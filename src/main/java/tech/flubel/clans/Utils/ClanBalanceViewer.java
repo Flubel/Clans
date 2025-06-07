@@ -5,22 +5,27 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClanBalanceViewer {
 
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public ClanBalanceViewer(JavaPlugin plugin){
+    public ClanBalanceViewer(JavaPlugin plugin, LanguageManager languageManager){
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void balanceviewer(Player player){
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan!");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("bank.no-clan"));
             return;
         }
 
@@ -28,7 +33,16 @@ public class ClanBalanceViewer {
         FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
 
         int clanbalance = clansConfig.getInt("clans." + clanName + ".balance");
-        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + "Clan Balance is: " + ChatColor.GREEN +"$" + clanbalance);
+
+
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("amount", String.valueOf(clanbalance));
+
+        String message = languageManager.get("bank.view.success", placeholders);
+        message = message.replace(String.valueOf(clanbalance), ChatColor.GREEN + "" + ChatColor.BOLD + "$" +clanbalance + ChatColor.YELLOW);
+
+
+        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + message);
 
     }
 

@@ -5,15 +5,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Kick {
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public Kick(JavaPlugin plugin) {
+    public Kick(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
     public void kickPlayer(Player kicker, String targetName) {
@@ -22,7 +27,7 @@ public class Kick {
 
         String clanName = getClanName(kicker); // Assume you have a method to get the clan name of the player
         if (clanName == null) {
-            kicker.sendMessage(ChatColor.RED + "You are not in any clan.");
+            kicker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("kick.no-clan"));
             return;
         }
 
@@ -40,21 +45,25 @@ public class Kick {
         else if (coLeaders.contains(kicker.getName())) {
             // Co-leader can only kick members, not co-leaders
             if (coLeaders.contains(targetName)) {
-                kicker.sendMessage(ChatColor.RED + "You cannot kick a co-leader.");
+                kicker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("kick.coleader-warn"));
                 return;
             }
             kickFromClan(targetName, clanName, members, coLeaders, config, clansFile, kicker);
         }
         // If the kicker is a member, they cannot kick anyone
         else {
-            kicker.sendMessage(ChatColor.RED + "You do not have permission to kick players.");
+            kicker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("kick.no-auth"));
         }
     }
 
     private void kickFromClan(String targetName, String clanName, List<String> members, List<String> coLeaders, FileConfiguration config, File clansFile, Player kicker) {
         // Check if the target player is in the clan
         if (!members.contains(targetName) && !coLeaders.contains(targetName)) {
-            kicker.sendMessage(ChatColor.RED + targetName + " is not a member or co-leader of your clan.");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            kicker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("kick.no-member", placeholders));
             return;
         }
 
@@ -71,14 +80,18 @@ public class Kick {
         // Save the changes
         try {
             config.save(clansFile);
-            kicker.sendMessage(ChatColor.GREEN + "Successfully kicked " + targetName + " from the clan.");
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+
+            kicker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("kick.success", placeholders));
             // Optionally, notify the kicked player
             Player target = kicker.getServer().getPlayer(targetName);
             if (target != null) {
-                target.sendMessage(ChatColor.RED + "You have been kicked from the clan.");
+                target.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("kick.kickmsg"));
             }
         } catch (Exception e) {
-            kicker.sendMessage(ChatColor.RED + "An error occurred while kicking the player.");
+            kicker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get(("kick.error")));
             e.printStackTrace();
         }
     }

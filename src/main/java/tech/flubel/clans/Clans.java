@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 import tech.flubel.clans.Utils.*;
 import tech.flubel.clans.metrics.Metrics;
 
@@ -24,6 +25,12 @@ import java.util.*;
 public final class Clans extends JavaPlugin implements Listener {
 
     private Economy economy;
+    private LanguageManager languageManager;
+
+
+    public LanguageManager getLanguageManager() {
+        return languageManager;
+    }
 
     @Override
     public void onEnable() {
@@ -46,8 +53,20 @@ public final class Clans extends JavaPlugin implements Listener {
 
         Metrics metrics = new Metrics(this,25416);
 
-
         saveDefaultConfig();
+
+
+        saveLangFile("cn.yml");
+        saveLangFile("de.yml");
+        saveLangFile("en.yml");
+        saveLangFile("fr.yml");
+        saveLangFile("ru.yml");
+        saveLangFile("tr.yml");
+
+
+        this.languageManager = new LanguageManager(this);
+
+
         getLogger().info("\u001B[38;2;23;138;214m================================================\u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ██████╗██╗      █████╗ ███╗   ██╗███████╗\u001B[0m");
@@ -57,7 +76,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.2                \u001B[0m");
+        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.3                \u001B[0m");
         getLogger().info("\u001B[38;2;0;255;0m                 Plugin Started               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -65,10 +84,22 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m================================================\u001B[0m");
     }
 
+    private void saveLangFile(String fileName) {
+        File file = new File(getDataFolder(), "lang/" + fileName);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs(); // create lang/ directory if it doesn't exist
+            saveResource("lang/" + fileName, false);
+        }
+    }
+
+    public void setLanguageManager(LanguageManager languageManager) {
+        this.languageManager = languageManager;
+    }
+
 
     @Override
     public void onDisable() {
-        saveConfig();
+//        saveConfig();
         getLogger().info("\u001B[38;2;23;138;214m================================================\u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ██████╗██╗      █████╗ ███╗   ██╗███████╗\u001B[0m");
@@ -78,7 +109,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.2                \u001B[0m");
+         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.3                \u001B[0m");
            getLogger().info("\u001B[38;2;255;0;0m                 Plugin Stopped               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -98,51 +129,51 @@ public final class Clans extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if the sender is a player
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Only players can use this command!");
+            sender.sendMessage(languageManager.get("clan.info.console"));
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length < 1) {
-            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "Usage: /clan create | list | invite | accept | deny | info and many more.");
+            player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.usage"));
             return true;
         }
 
         if (command.getName().equalsIgnoreCase("cc")) {
             if (args.length < 1) {
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "Usage: /cc <message>");
+                player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.short-chat"));
                 return true;
             }
             String message = String.join(" ", args);
-            ClanChat clanChat = new ClanChat(this);
+            ClanChat clanChat = new ClanChat(this, this.languageManager);
             clanChat.sendClanChatMessage(player,message);
             return true;
         }
 
         if (args[0].equalsIgnoreCase("chat")) {
             if (args.length < 2) {
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "Usage: /clan chat <message>");
+                player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.chat"));
                 return true;
             }
 
             String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-            ClanChat clanChat = new ClanChat(this);
+            ClanChat clanChat = new ClanChat(this, this.languageManager);
             clanChat.sendClanChatMessage(player, message);
             return true;
         }
 
         switch (args[0]) {
             case "top":
-                ListClans.ClanLister(player);
+                ListClans.ClanLister(player, languageManager);
                 return true;
             case "create":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + "Clan Name cannot be empty.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.name-req"));
                     return true;
                 }
                 if (args[1].length() >= 20) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + "Clan Name cannot be longer than 20 characters.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.name-limit"));
                     return true;
                 }
                 String clanName = args[1];
@@ -150,106 +181,106 @@ public final class Clans extends JavaPlugin implements Listener {
                 return true;
             case "invite": {
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter the players name to invite.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.player-name"));
                     return true;
                 }
                 String playerNameToBeInvited = args[1];
-                InvitePlayer invitePlayer = new InvitePlayer(this);
+                InvitePlayer invitePlayer = new InvitePlayer(this, this.languageManager);
                 invitePlayer.sendInvite(player, playerNameToBeInvited);
                 return true;
             }
             case "accept": {
-                InvitePlayer invitePlayer = new InvitePlayer(this);
+                InvitePlayer invitePlayer = new InvitePlayer(this, this.languageManager);
                 invitePlayer.AcceptInvite(player);
                 return true;
             }
             case "deny": {
-                InvitePlayer invitePlayer = new InvitePlayer(this);
+                InvitePlayer invitePlayer = new InvitePlayer(this, this.languageManager);
                 invitePlayer.DenyInvite(player);
                 return true;
             }
             case "info":
-                ListPlayers listPlayers = new ListPlayers(this);
+                ListPlayers listPlayers = new ListPlayers(this, this.languageManager);
                 listPlayers.PlayerLister(player);
                 return true;
             case "leave":
-                LeaveClan leaveClan = new LeaveClan(this);
+                LeaveClan leaveClan = new LeaveClan(this, this.languageManager);
                 leaveClan.clanleaver(player);
                 return true;
             case "promote":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter a clan members name to Promote.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.nprom"));
                     return true;
                 }
-                Promote promote = new Promote(this);
+                Promote promote = new Promote(this, this.languageManager);
                 promote.promotePlayer(player, args[1]);
                 return true;
             case "demote":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter a clan members name to Demote.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.ndemo"));
                     return true;
                 }
-                Demote demote = new Demote(this);
+                Demote demote = new Demote(this, this.languageManager);
                 demote.demotePlayer(player, args[1]);
                 return true;
             case "kick":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter a clan members name to Kick.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.mem-kick"));
                     return true;
                 }
-                Kick kick = new Kick(this);
+                Kick kick = new Kick(this, this.languageManager);
                 kick.kickPlayer(player, args[1]);
                 return true;
             case "transfer":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter a clan members name to Transfer leadership to.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.transfer"));
                     return true;
                 }
-                TransferLeadership transferLeadership = new TransferLeadership(this);
+                TransferLeadership transferLeadership = new TransferLeadership(this, this.languageManager);
                 transferLeadership.transferLeadership(player, args[1]);
                 return true;
             case "join":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter a clan Name.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.null-clan"));
                     return true;
                 }
-                ClanJoin clanJoin = new ClanJoin(this);
+                ClanJoin clanJoin = new ClanJoin(this, this.languageManager);
                 clanJoin.requestJoinClan(player, args[1]);
                 return true;
             case "raccept":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter the players name to accept the request.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.naccept"));
                     return true;
                 }
-                AcceptorJoinReq acceptorJoinReq = new AcceptorJoinReq(this);
+                AcceptorJoinReq acceptorJoinReq = new AcceptorJoinReq(this, this.languageManager);
                 acceptorJoinReq.acceptJoinRequest(player, args[1]);
                 return true;
             case "rdeny":
                 if (args.length < 2 || args[1].isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "|" + ChatColor.WHITE + " Enter the players name to deny the request.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.ndeny"));
                     return true;
                 }
-                DenyJoinReq denyJoinReq = new DenyJoinReq(this);
+                DenyJoinReq denyJoinReq = new DenyJoinReq(this, this.languageManager);
                 denyJoinReq.denyRequest(player, args[1]);
                 return true;
             case "sethome":
-                ClanHomeSet clanHomeSet = new ClanHomeSet(this);
+                ClanHomeSet clanHomeSet = new ClanHomeSet(this, this.languageManager);
                 clanHomeSet.setClanHome(player);
                 return true;
             case "home":
-                TpClanHome tpClanHome = new TpClanHome(this);
+                TpClanHome tpClanHome = new TpClanHome(this, this.languageManager);
                 tpClanHome.teleportToClanHome(player);
                 return true;
             case "requests":
-                Requests requests = new Requests(this);
+                Requests requests = new Requests(this, this.languageManager);
                 requests.showRequests(player);
                 return true;
             case "reload":
-                ReloadConfig reloadConfig = new ReloadConfig(this);
+                ReloadConfig reloadConfig = new ReloadConfig(this, this.languageManager);
                 reloadConfig.reloadConfig(player);
                 return true;
             case "upgrade":
-                UpgradeClan upgradeClan = new UpgradeClan(this,this.economy);
+                UpgradeClan upgradeClan = new UpgradeClan(this,this.economy, this.languageManager);
                 try {
                     upgradeClan.ClanUpgrader(player);
                 } catch (IOException e) {
@@ -257,38 +288,38 @@ public final class Clans extends JavaPlugin implements Listener {
                 }
                 return true;
             case "help":
-                player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| Clans Help");
-                player.sendMessage(ChatColor.YELLOW + "/clan top" + ChatColor.WHITE + " - Listranking for all top clans.");
-                player.sendMessage(ChatColor.YELLOW + "/clan create <name>" + ChatColor.WHITE + " - Create a new clan with the specified name.");
-                player.sendMessage(ChatColor.GREEN + "/clan invite <player>" + ChatColor.WHITE + " - Invite a player to your clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan accept" + ChatColor.WHITE + " - Accept a clan invite.");
-                player.sendMessage(ChatColor.GREEN + "/clan deny" + ChatColor.WHITE + " - Deny a clan invite.");
-                player.sendMessage(ChatColor.GREEN + "/clan info" + ChatColor.WHITE + " - View information about the clan you're in.");
-                player.sendMessage(ChatColor.GREEN + "/clan leave" + ChatColor.WHITE + " - Leave your current clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan balance" + ChatColor.WHITE + " - View the total clans balance.");
-                player.sendMessage(ChatColor.GREEN + "/clan promote <player>" + ChatColor.WHITE + " - Promote a clan member.");
-                player.sendMessage(ChatColor.GREEN + "/clan demote <player>" + ChatColor.WHITE + " - Demote a clan member.");
-                player.sendMessage(ChatColor.GREEN + "/clan kick <player>" + ChatColor.WHITE + " - Kick a player from your clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan deposit <amount>" + ChatColor.WHITE + " - Deposits money to clans bank balance.");
-                player.sendMessage(ChatColor.GREEN + "/clan withdraw <amount>" + ChatColor.WHITE + " - Withdraws money from clans bank balance.");
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan transfer <player>" + ChatColor.WHITE + " - Transfer clan leadership to another player.");
-                player.sendMessage(ChatColor.YELLOW + "/clan join <name>" + ChatColor.WHITE + " - Request to join a clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan raccept <player>" + ChatColor.WHITE + " - Accept a player's request to join the clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan rdeny <player>" + ChatColor.WHITE + " - Deny a player's request to join the clan.");
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan sethome" + ChatColor.WHITE + " - Set the home location for the clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan home" + ChatColor.WHITE + " - Teleport to the clan home.");
-                player.sendMessage(ChatColor.GREEN + "/clan requests" + ChatColor.WHITE + " - View pending requests to join your clan.");
-                player.sendMessage(ChatColor.GREEN + "/clan upgrade" + ChatColor.WHITE + " - Upgrades the clan player slot.");
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan pvp" + ChatColor.WHITE + " - Toggles pvp between clan members.");
-                player.sendMessage(ChatColor.RED + "/clan reload" + ChatColor.WHITE + " - Reload the plugin configuration.");
+                player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + languageManager.get("clan.clan_help_descriptions.title"));
+                player.sendMessage(ChatColor.YELLOW + "/clan top " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.top"));
+                player.sendMessage(ChatColor.YELLOW + "/clan create <name> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.create"));
+                player.sendMessage(ChatColor.GREEN + "/clan invite <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.invite"));
+                player.sendMessage(ChatColor.GREEN + "/clan accept " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.accept"));
+                player.sendMessage(ChatColor.GREEN + "/clan deny " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.deny"));
+                player.sendMessage(ChatColor.GREEN + "/clan info " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.info"));
+                player.sendMessage(ChatColor.GREEN + "/clan leave " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.leave"));
+                player.sendMessage(ChatColor.GREEN + "/clan balance " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.balance"));
+                player.sendMessage(ChatColor.GREEN + "/clan promote <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.promote"));
+                player.sendMessage(ChatColor.GREEN + "/clan demote <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.demote"));
+                player.sendMessage(ChatColor.GREEN + "/clan kick <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.kick"));
+                player.sendMessage(ChatColor.GREEN + "/clan deposit <amount> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.deposit"));
+                player.sendMessage(ChatColor.GREEN + "/clan withdraw <amount> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.withdraw"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan transfer <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.transfer"));
+                player.sendMessage(ChatColor.YELLOW + "/clan join <name> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.join"));
+                player.sendMessage(ChatColor.GREEN + "/clan raccept <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.raccept"));
+                player.sendMessage(ChatColor.GREEN + "/clan rdeny <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.rdeny"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan sethome " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.sethome"));
+                player.sendMessage(ChatColor.GREEN + "/clan home " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.home"));
+                player.sendMessage(ChatColor.GREEN + "/clan requests " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.requests"));
+                player.sendMessage(ChatColor.GREEN + "/clan upgrade " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.upgrade"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan pvp " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.pvp"));
+                player.sendMessage(ChatColor.RED + "/clan reload " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.reload"));
                 return true;
             case "pinfo":
-                player.sendMessage(ChatColor.YELLOW + "Made at Flubel by Fiend.");
-                player.sendMessage(ChatColor.YELLOW + "Version: 1.2.0");
+                player.sendMessage(ChatColor.YELLOW + languageManager.get("clan.general"));
+                player.sendMessage(ChatColor.YELLOW + languageManager.get("clan.version"));
                 return true;
             case "deposit":
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED + "Usage: /clan deposit <amount>");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " +  ChatColor.WHITE + languageManager.get("clan.info.deposit"));
                     return true;
                 }
 
@@ -296,16 +327,16 @@ public final class Clans extends JavaPlugin implements Listener {
                 try {
                     amount = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Please enter a valid number.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " +  ChatColor.WHITE + languageManager.get("clan.info.bad-amount"));
                     return true;
                 }
 
-                ClanBankDeposit clanBankDeposit = new ClanBankDeposit(this, this.economy);
+                ClanBankDeposit clanBankDeposit = new ClanBankDeposit(this, this.economy, this.languageManager);
                 clanBankDeposit.BankClanDep(player, amount);
                 return true;
             case "withdraw":
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED + "Usage: /clan withdraw <amount>");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " +  ChatColor.WHITE + languageManager.get("clan.info.withdrawal"));
                     return true;
                 }
 
@@ -313,19 +344,19 @@ public final class Clans extends JavaPlugin implements Listener {
                 try {
                     amount1 = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Please enter a valid number.");
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " +  ChatColor.WHITE + languageManager.get("clan.info.bad-amount"));
                     return true;
                 }
 
-                ClanBankWithdraw clanBankWithdraw = new ClanBankWithdraw(this, this.economy);
+                ClanBankWithdraw clanBankWithdraw = new ClanBankWithdraw(this, this.economy, this.languageManager);
                 clanBankWithdraw.withdrawFromClan(player, amount1);
                 return true;
             case "pvp":
-                ClanPvPToggle clanPvPToggle = new ClanPvPToggle(this);
+                ClanPvPToggle clanPvPToggle = new ClanPvPToggle(this, this.languageManager);
                 clanPvPToggle.pvptoggler(player);
                 return true;
             case "balance":
-                ClanBalanceViewer clanBalanceViewer = new ClanBalanceViewer(this);
+                ClanBalanceViewer clanBalanceViewer = new ClanBalanceViewer(this, this.languageManager);
                 clanBalanceViewer.balanceviewer(player);
                 return true;
         }
@@ -355,8 +386,11 @@ public final class Clans extends JavaPlugin implements Listener {
 
         if (!pvpEnabled) {
             event.setCancelled(true);
-            attacker.sendMessage(ChatColor.RED + "PvP is disabled between clan members.");
-            victim.sendMessage(ChatColor.RED + attacker.getName() + " tried to attack you but clan pvp is disabled.");
+            attacker.sendMessage(ChatColor.RED + languageManager.get("pvp.attacker-msg"));
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("attacker", attacker.getName());
+            victim.sendMessage(ChatColor.RED + languageManager.get("pvp.victim-msg", placeholders));
         }
     }
 
@@ -383,12 +417,17 @@ public final class Clans extends JavaPlugin implements Listener {
         SearchPlayer searchPlayer = new SearchPlayer(this);
 
         if (searchPlayer.isPlayerInClan(player)) {
-            player.sendMessage(ChatColor.RED + "" +ChatColor.BOLD + "| " + ChatColor.RED + "You cannot create a new clan while you are a member/owner of another clan.");
+            player.sendMessage(ChatColor.RED + "" +ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.already-in-clan"));
             return;
         }
 
         if (economy.getBalance(player) < requiredBalance) {
-            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + "You need " + this.getConfig().getDouble("Amount", 50000.0) + " to create a clan!");
+            double amount = this.getConfig().getDouble("Amount", 50000.0);
+
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("amount", String.valueOf(amount));
+
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.low-amount", placeholders));
             return;
         }
 
@@ -405,7 +444,7 @@ public final class Clans extends JavaPlugin implements Listener {
             String cleanedExistingClanName = existingClan.replaceAll("&[a-zA-Z0-9]", "").toLowerCase();
 
             if (cleanedClanName1.equals(cleanedExistingClanName)) {
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + "Clan name is already taken.");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.name-taken"));
                 return;
             }
         }
@@ -425,12 +464,17 @@ public final class Clans extends JavaPlugin implements Listener {
             clansConfig.save(clansFile);
         } catch (IOException e) {
             e.printStackTrace();
-            player.sendMessage("An error occurred while saving the clan.");
+            player.sendMessage(languageManager.get("clan.error.save-clan"));
             return;
         }
         String TranslatedClanName = ChatColor.translateAlternateColorCodes('&', clanName);
 
-        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + "Clan " + TranslatedClanName + ChatColor.GREEN + " created successfully!");
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("clan_name", TranslatedClanName);
+
+        String message = languageManager.get("clan.success.created", placeholders);
+        message = message.replace(TranslatedClanName, TranslatedClanName + ChatColor.GREEN);
+        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
     }
 
 

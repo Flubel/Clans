@@ -7,19 +7,25 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.Clans;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UpgradeClan {
     private final JavaPlugin plugin;
     private final Economy economy;
+    private final LanguageManager languageManager;
 
-    public UpgradeClan(JavaPlugin plugin, Economy economy) {
+    public UpgradeClan(JavaPlugin plugin, Economy economy, LanguageManager languageManager) {
         this.plugin = plugin;
         this.economy = economy;
+        this.languageManager = languageManager;
     }
 
 
@@ -27,7 +33,7 @@ public class UpgradeClan {
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan!");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("upgrade.no-clan"));
             return;
         }
 
@@ -36,12 +42,12 @@ public class UpgradeClan {
 
         if (!clansConfig.getString("clans." + clanName + ".leader").equals(player.getName()) &&
                 !clansConfig.getStringList("clans." + clanName + ".co_leader").contains(player.getName())) {
-            player.sendMessage(ChatColor.RED + "You must be a leader or co-leader to upgrade your clan.");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("upgrade.no-auth"));
             return;
         }
         int requiredBalance = plugin.getConfig().getInt("upgrade_cost", 10000);
         if (economy.getBalance(player) < requiredBalance) {
-            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + "You don't have enough money to Upgrade your Clan.");
+            player.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("upgrade.not-enough-balance"));
             return;
         }
         int slotsUp = plugin.getConfig().getInt("upgrade_slots", 1);
@@ -56,7 +62,11 @@ public class UpgradeClan {
         for (String memberName : clanMembers) {
             Player member = Bukkit.getPlayer(memberName);
             if (member != null && member.isOnline()) {
-                    member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + "Clan's player slot was upgraded by " + ChatColor.BOLD  + player.getName());
+
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("upgrader_name", player.getName());
+
+                member.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + languageManager.get("upgrade.success", placeholders));
             }
         }
 
@@ -64,7 +74,7 @@ public class UpgradeClan {
             clansConfig.save(clansFile);
         } catch (IOException e) {
             e.printStackTrace();
-            player.sendMessage("An error occurred while saving the clan.");
+            player.sendMessage(languageManager.get("clan.error.save-clan"));
             return;
         }
 

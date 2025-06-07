@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.util.*;
@@ -55,18 +56,19 @@ public class ListClans {
 //    }
 
 
-    public static void ClanLister(Player player) {
+
+    public static void ClanLister(Player player, LanguageManager languageManager) {
         File clansFile = new File(player.getServer().getPluginManager().getPlugin("Clans").getDataFolder(), "clans.yml");
         FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
 
         if (!clansConfig.contains("clans")) {
-            player.sendMessage("There are no clans yet.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("list_clans.no-clans"));
             return;
         }
 
         Set<String> clanNamesSet = clansConfig.getConfigurationSection("clans").getKeys(false);
         if (clanNamesSet.isEmpty()) {
-            player.sendMessage("There are no clans to display.");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("list_clans.no-clans"));
             return;
         }
 
@@ -88,7 +90,7 @@ public class ListClans {
         List<String> sortedClans = new ArrayList<>(clanNamesSet);
         sortedClans.sort((a, b) -> Double.compare(clanRanks.get(b), clanRanks.get(a)));
 
-        player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + "Top Clans List:");
+        player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.GOLD + languageManager.get("list_clans.header"));
         for (int i = 0; i < sortedClans.size(); i++) {
             String clanName = sortedClans.get(i);
             List<String> members = clansConfig.getStringList("clans." + clanName + ".members");
@@ -101,7 +103,7 @@ public class ListClans {
             int totalMembers = members.size() + coLeaders.size() + (leader != null ? 1 : 0);
             double clanBalance = clansConfig.getDouble("clans." + clanName + ".balance");
 
-            player.sendMessage(ChatColor.BOLD + "" + (i + 1) + ") " + formattedClanName + ChatColor.YELLOW + " | Leader: " + leader + " ("
+            player.sendMessage(ChatColor.BOLD + "" + (i + 1) + ") " + formattedClanName + ChatColor.YELLOW + " | " + languageManager.get("list_clans.leader_title") + ": " + leader + " ("
                     + totalMembers + "/" + maxmembers + ") | $" + clanBalance);
         }
     }

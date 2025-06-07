@@ -5,25 +5,27 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class ListPlayers {
 
     private final JavaPlugin plugin;
+    private final LanguageManager languageManager;
 
-    public ListPlayers(JavaPlugin plugin) {
+    public ListPlayers(JavaPlugin plugin, LanguageManager languageManager) {
         this.plugin = plugin;
+        this.languageManager = languageManager;
     }
 
 
     public void PlayerLister(Player player) {
         String clanName = getClanName(player);
         if (clanName == null || clanName.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "You are not in a clan");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("list_players.no-clan"));
         }else{
             player.sendMessage(getClanMembers(clanName));
         }
@@ -45,7 +47,7 @@ public class ListPlayers {
         // Add leader
         if (clansConfig.contains("clans." + clanName + ".leader")) {
             String leader = clansConfig.getString("clans." + clanName + ".leader");
-            formattedMessage.append(ChatColor.GOLD + "" + ChatColor.BOLD + "Leader:\n")
+            formattedMessage.append(ChatColor.GOLD + "" + ChatColor.BOLD + languageManager.get("list_players.leader_title") + "\n")
                     .append(ChatColor.BLUE + leader + "\n");
             totalPlayers++;  // Count the leader
         }
@@ -54,7 +56,7 @@ public class ListPlayers {
         if (clansConfig.contains("clans." + clanName + ".co_leader")) {
             List<String> coLeaders = clansConfig.getStringList("clans." + clanName + ".co_leader");
             if (!coLeaders.isEmpty()) {
-                formattedMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + "Co_Leaders:\n")
+                formattedMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + languageManager.get("list_players.co-leader_title") + "\n")
                         .append(ChatColor.DARK_GREEN + String.join(", ", coLeaders) + "\n");
                 totalPlayers += coLeaders.size();  // Count co-leaders
             }
@@ -64,7 +66,7 @@ public class ListPlayers {
         if (clansConfig.contains("clans." + clanName + ".members")) {
             members.addAll(clansConfig.getStringList("clans." + clanName + ".members"));
             if (!members.isEmpty()) {
-                formattedMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + "Members:\n")
+                formattedMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + languageManager.get("list_players.member_title") + "\n")
                         .append(ChatColor.GREEN + String.join(", ", members) + "\n");
                 totalPlayers += members.size();  // Count members
             }
@@ -73,7 +75,7 @@ public class ListPlayers {
 
         // Show total players
         int maxmembersclan = clansConfig.getInt("clans." + clanName + ".max_members");
-        formattedMessage.append(ChatColor.GOLD + "Total Members: (").append(ChatColor.WHITE + String.valueOf(totalPlayers) + "/" + maxmembersclan + ChatColor.GOLD + ")\n");
+        formattedMessage.append(ChatColor.GOLD + languageManager.get("list_players.footer")  + " (").append(ChatColor.WHITE + String.valueOf(totalPlayers) + "/" + maxmembersclan + ChatColor.GOLD + ")\n");
 
         return formattedMessage.toString();
     }
