@@ -1,11 +1,13 @@
 clan:
   general: "Gemaakt bij Flubel door Fiend."
-  version: "Versie: 1.3.0"
+  version: "Versie: 1.4.0"
   error:
     already-in-clan: "Du kannst keinen neuen Clan erstellen, während du Mitglied oder Besitzer eines anderen Clans bist."
     low-amount: "Du benötigst %amount%, um einen Clan zu erstellen!"
     name-taken: "Der Clanname ist bereits vergeben."
     save-clan: "Beim Speichern des Clans ist ein Fehler aufgetreten."
+    banned-prefix: "Entschuldigung! Dieses Präfix ist verboten, versuchen Sie etwas anderes."
+    no-space: "Der Clan-Name darf keine Leerzeichen enthalten."
   success:
     created: "Clan %clan_name% wurde erfolgreich erstellt!"
   info:
@@ -26,6 +28,8 @@ clan:
     deposit: "Gebruik: /clan deposit <amount>"
     withdrawal: "Gebruik: /clan withdraw <amount>"
     bad-amount: "Voer een geldig nummer in."
+    delerror: "Voer de naam van een clan in om te verwijderen."
+    no-name: "Gebruik: /clan change <new_prefix>. Voorvoegsels kunnen gekleurd zijn."
   clan_help_descriptions:
     title: "| Clans Help"
     top: "Toon ranglijst van alle topclans."
@@ -51,6 +55,8 @@ clan:
     upgrade: "Upgrade het spelerslimiet van de clan."
     pvp: "Schakel PVP tussen clangenoten in of uit."
     reload: "Herlaad de pluginconfiguratie."
+    delete: " - Verwijdert de clan en gerelateerde gegevens."
+    change: " - Wijzig het voorvoegsel van de clan (met kleurcodes)."
 pvp:
   attacker-msg: "PvP ist zwischen Clanmitgliedern deaktiviert."
   victim-msg: "%attacker% hat versucht, dich anzugreifen, aber Clan-PvP ist deaktiviert."
@@ -194,3 +200,15 @@ add:
   error: "Beim Hinzufügen zum Clan ist ein Fehler aufgetreten."
   alr-mem: "Du bist bereits Mitglied des Clans!"
   success: "Du bist dem Clan %clan_name% beigetreten!"
+delete:
+  success: "Clan %clan_name% is succesvol verwijderd."
+  error: "Kan de clan niet verwijderen, controleer de console op fouten."
+  no-clan: "Clan %clan_name% bestaat niet."
+  no-perm: "Je hebt geen toestemming om clans te verwijderen."
+change_prefix:
+  no-clan: "Je zit niet in een clan!"
+  leader-req: "Alleen de leider kan het voorvoegsel van de clan wijzigen."
+  name-taken: "Clan naam is al in gebruik. Probeer iets anders."
+  no-try: "Limiet voor wijzigen van clan naam bereikt."
+  success: "Clan naam gewijzigd van %old_name% naar %new_name%."
+  error: "Kan de clan niet verwijderen, controleer de console op fouten."

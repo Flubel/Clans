@@ -1,11 +1,13 @@
 clan:
   general: "Made at Flubel by Fiend."
-  version: "Version: 1.3.0"
+  version: "Version: 1.4.0"
   error:
     already-in-clan: "You cannot create a new clan while you are a member/owner of another clan."
     low-amount: "You need %amount% to create a clan!"
     name-taken: "Clan name is already taken."
     save-clan: "An error occurred while saving the clan."
+    banned-prefix: "Sorry! This prefix is banned, try something else."
+    no-space: "Clan name cannot include spaces."
   success:
     created: "Clan %clan_name% created successfully!"
   info:
@@ -26,6 +28,8 @@ clan:
     deposit: "Usage: /clan deposit <amount>"
     withdrawal: "Usage: /clan withdraw <amount>"
     bad-amount: "Please enter a valid number."
+    delerror: "Enter a Clan's name to delete."
+    no-name: "Usage: /clan change <new_prefix>. Prefixes can be color coded."
   clan_help_descriptions:
     title: "| Clans Help"
     top: " - List ranking for all top clans."
@@ -51,6 +55,8 @@ clan:
     upgrade: " - Upgrades the clan player slot."
     pvp: " - Toggles pvp between clan members."
     reload: " - Reload the plugin configuration."
+    delete: " - Deletes the Clan and its relevant data."
+    change: " - Change the clans prefix (Color Coded)."
 pvp:
   attacker-msg: "PvP is disabled between clan members."
   victim-msg: "%attacker% tried to attack you but clan pvp is disabled."
@@ -194,3 +200,15 @@ add:
   error: "An error occurred while adding you to the clan."
   alr-mem: "You are already a member of the clan!"
   success: "You have joined the clan %clan_name%!"
+delete:
+  success: "Clan %clan_name% was deleted successfully."
+  error: "Failed to delete clan, check console for errors."
+  no-clan: "Clan %clan_name% does not exist."
+  no-perm: "You do not have permission to delete clans."
+change_prefix:
+  no-clan: "You are not in a clan!"
+  leader-req: "Only the current leader can change clan's prefix."
+  name-taken: "Clan name is already taken. try something else."
+  no-try: "Limit for clan's name change reached."
+  success: "Clan name changed from %old_name% to %new_name%."
+  error: "Failed to delete clan, check console for errors."

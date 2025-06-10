@@ -46,6 +46,7 @@ public final class Clans extends JavaPlugin implements Listener {
 
         this.getCommand("clan").setExecutor(this);
         this.getCommand("cc").setExecutor(this);
+        this.getCommand("clan").setTabCompleter(new ClanTabCompleter(this));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new ClanPlaceholderExpansion(this).register();
@@ -76,7 +77,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.3                \u001B[0m");
+        getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.4                \u001B[0m");
         getLogger().info("\u001B[38;2;0;255;0m                 Plugin Started               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -109,7 +110,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.3                \u001B[0m");
+         getLogger().info("\u001B[38;2;225;215;0m                  Version: 1.4                \u001B[0m");
            getLogger().info("\u001B[38;2;255;0;0m                 Plugin Stopped               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -307,11 +308,13 @@ public final class Clans extends JavaPlugin implements Listener {
                 player.sendMessage(ChatColor.GREEN + "/clan raccept <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.raccept"));
                 player.sendMessage(ChatColor.GREEN + "/clan rdeny <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.rdeny"));
                 player.sendMessage(ChatColor.DARK_GREEN + "/clan sethome " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.sethome"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan change <new_prefix> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.change"));
                 player.sendMessage(ChatColor.GREEN + "/clan home " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.home"));
                 player.sendMessage(ChatColor.GREEN + "/clan requests " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.requests"));
                 player.sendMessage(ChatColor.GREEN + "/clan upgrade " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.upgrade"));
                 player.sendMessage(ChatColor.DARK_GREEN + "/clan pvp " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.pvp"));
                 player.sendMessage(ChatColor.RED + "/clan reload " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.reload"));
+                player.sendMessage(ChatColor.RED + "/clan delete " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.delete"));
                 return true;
             case "pinfo":
                 player.sendMessage(ChatColor.YELLOW + languageManager.get("clan.general"));
@@ -358,6 +361,29 @@ public final class Clans extends JavaPlugin implements Listener {
             case "balance":
                 ClanBalanceViewer clanBalanceViewer = new ClanBalanceViewer(this, this.languageManager);
                 clanBalanceViewer.balanceviewer(player);
+                return true;
+            case "delete":
+                DeleteClan deleteClan = new DeleteClan(this, this.languageManager);
+                if (args.length < 2 || args[1].isEmpty()) {
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.delerror"));
+                    return true;
+                }
+
+                deleteClan.deleteclan(args[1].toLowerCase(), player);
+                return true;
+            case "change":
+                ChangePrefix changePrefix = new ChangePrefix(this, this.languageManager);
+
+                if (args.length < 2 || args[1].isEmpty()) {
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| " + ChatColor.WHITE + languageManager.get("clan.info.no-name"));
+                    return true;
+                }
+
+                try {
+                    changePrefix.ChangeClanName(args[1], player);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 return true;
         }
 
@@ -434,19 +460,34 @@ public final class Clans extends JavaPlugin implements Listener {
         File clansFile = new File(getDataFolder(), "clans.yml");
         FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
 
-        String cleanedClanName = clanName.replaceAll("&[a-zA-Z0-9]", "");
-
-        String cleanedClanName1 = clanName.replaceAll("&[a-zA-Z0-9]", "").toLowerCase();
+        String cleanedClanName = clanName.replaceAll("&[a-zA-Z0-9]", "").toLowerCase();
 
         Set<String> existingClanNames = clansConfig.getConfigurationSection("clans").getKeys(false);
 
         for (String existingClan : existingClanNames) {
             String cleanedExistingClanName = existingClan.replaceAll("&[a-zA-Z0-9]", "").toLowerCase();
 
-            if (cleanedClanName1.equals(cleanedExistingClanName)) {
+            if (cleanedClanName.equals(cleanedExistingClanName)) {
                 player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.name-taken"));
                 return;
             }
+        }
+
+
+        Set<String> BannedPrefixes =  new HashSet<>(this.getConfig().getStringList("banned_prefixes"));
+
+        for (String BannedPrefix : BannedPrefixes) {
+            String cleanedExistingClanName = BannedPrefix.toLowerCase();
+
+            if (cleanedClanName.equals(cleanedExistingClanName)) {
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.banned-prefix"));
+                return;
+            }
+        }
+
+        if(cleanedClanName.contains(" ")){
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan.error.no-space"));
+            return;
         }
 
 
@@ -459,6 +500,11 @@ public final class Clans extends JavaPlugin implements Listener {
         clansConfig.set("clans." + cleanedClanName + ".pvp", true);
         clansConfig.set("clans." + cleanedClanName + ".balance", this.getConfig().getInt("initial_balance",25000));
         clansConfig.set("clans." + cleanedClanName + ".max_members", this.getConfig().getInt("max_members",50));
+        clansConfig.set("clans." + cleanedClanName + ".prefix_change", this.getConfig().getInt("prefix_change",1));
+
+
+// May add in the future :p
+//        clansConfig.set("clans." + cleanedClanName + ".id", generateClanId(7));
 
         try {
             clansConfig.save(clansFile);
@@ -477,5 +523,15 @@ public final class Clans extends JavaPlugin implements Listener {
         player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
     }
 
+// May add in the future :p
+//    public static String generateClanId(int length) {
+//        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//        StringBuilder id = new StringBuilder();
+//        Random random = new Random();
+//        for (int i = 0; i < length; i++) {
+//            id.append(chars.charAt(random.nextInt(chars.length())));
+//        }
+//        return id.toString();
+//    }
 
 }

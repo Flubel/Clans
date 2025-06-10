@@ -107,7 +107,7 @@ public class TransferLeadership {
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("new_leader", targetName);
 
-            leader.sendMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("transfer.success-old-leader"));
+            leader.sendMessage(ChatColor.GREEN +""+ ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("transfer.success-old-leader", placeholders));
         } catch (Exception e) {
             leader.sendMessage(ChatColor.RED +""+ ChatColor.BOLD + "| " +  ChatColor.RED + languageManager.get("transfer.error"));
             e.printStackTrace();

@@ -1,11 +1,13 @@
 clan:
   general: "Flubel'de Fiend tarafından yapıldı."
-  version: "Sürüm: 1.3.0"
+  version: "Sürüm: 1.4.0"
   error:
     already-in-clan: "Zaten bir klana üyeyseniz veya lider iseniz, yeni bir klan oluşturamazsınız."
     low-amount: "Bir klan oluşturmak için %amount% gerekli!"
     name-taken: "Bu klan adı zaten alınmış."
     save-clan: "Klan kaydedilirken bir hata oluştu."
+    banned-prefix: "Üzgünüm! Bu önek yasaklandı, başka bir şey deneyin."
+    no-space: "Klan ismi boşluk içeremez."
   success:
     created: "%clan_name% adlı klan başarıyla oluşturuldu!"
   info:
@@ -26,6 +28,8 @@ clan:
     deposit: "Kullanım: /clan deposit <amount>"
     withdrawal: "Kullanım: /clan withdraw <amount>"
     bad-amount: "Lütfen geçerli bir sayı girin."
+    delerror: "Silmek için bir Klan ismi girin."
+    no-name: "Kullanım: /clan change <new_prefix>. Ön ekler renklendirilebilir."
   clan_help_descriptions:
     title: "| Klan Yardımı"
     top: "Tüm en iyi klanların sıralamasını listele."
@@ -51,6 +55,8 @@ clan:
     upgrade: "Klan oyuncu sınırını yükselt."
     pvp: "Klan üyeleri arasında PvP'yi aç/kapat."
     reload: "Eklenti yapılandırmasını yeniden yükle."
+    delete: " - Klanı ve ilgili verileri siler."
+    change: " - Klanın ön ekini değiştir (Renk Kodlu)."
 pvp:
   attacker-msg: "Klan üyeleri arasında PvP devre dışı bırakıldı."
   victim-msg: "%attacker% sizi vurmaya çalıştı ama klan PvP'si kapalı."
@@ -194,3 +200,15 @@ add:
   error: "Klana eklenirken bir hata oluştu."
   alr-mem: "Zaten bu klanın üyesisiniz!"
   success: "%clan_name% klanına katıldınız!"
+delete:
+  success: "%clan_name% adlı klan başarıyla silindi."
+  error: "Klan silinemedi, hatalar için konsolu kontrol edin."
+  no-clan: "%clan_name% adlı klan mevcut değil."
+  no-perm: "Klanları silmek için izniniz yok."
+change_prefix:
+  no-clan: "Bir klana üye değilsiniz!"
+  leader-req: "Yalnızca mevcut lider klanın ön ekini değiştirebilir."
+  name-taken: "Klan ismi zaten kullanılıyor. Başka bir şey deneyin."
+  no-try: "Klan adı değiştirme sınırına ulaşıldı."
+  success: "Klan adı %old_name% olarak %new_name% şeklinde değiştirildi."
+  error: "Klan silinemedi, hatalar için konsolu kontrol edin."

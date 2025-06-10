@@ -15,6 +15,11 @@ Amount: 50000
 max_members: 50
 
 # -------------------------------------------------------
+# The maximum number of times a leader can change clans prefix.
+# before purchasing any upgrades.
+prefix_change: 1
+
+# -------------------------------------------------------
 # Time (in seconds) before a clan invite automatically expires.
 # Once expired, the invite will no longer be valid.
 invite_expire: 30
@@ -38,3 +43,65 @@ initial_balance: 25000
 # The language the plugin will use.
 # Supported Languages Chinese (cn), Dutch (de), English (en) [Default], French (fr), Russian (ru), Turkish (tr)
 language: en
+
+# -------------------------------------------------------
+# The list of words that are prohibited as clan's name.
+# You can add up to 5,000 words here (They're all case in-sensitive).
+banned_prefixes:
+  - nigga
+  - nigger
+  - gay
+  - bitch
+  - fuck
+  - shit
+  - cunt
+  - slut
+  - whore
+  - dick
+  - pussy
+  - asshole
+  - faggot
+  - retard
+  - rape
+  - rapist
+  - pedo
+  - childmolester
+  - nazi
+  - hitler
+  - jew
+  - kike
+  - chink
+  - spic
+  - tranny
+  - negro
+  - islam
+  - muslim
+  - christian
+  - terrorist
+  - isis
+  - kill
+  - suicide
+  - death
+  - die
+  - cum
+  - piss
+  - feces
+  - poop
+  - fart
+  - dildo
+  - cock
+  - hentai
+  - incest
+  - bdsm
+  - porn
+  - sex
+  - xxx
+  - blowjob
+  - anal
+  - breast
+  - nipple
+  - balls
+  - testicle
+  - erection
+  - penis
+  - vagina

@@ -1,11 +1,13 @@
 clan:
   general: "由 Fiend 在 Flubel 制作。"
-  version: "版本：1.3.0"
+  version: "版本：1.4.0"
   error:
     already-in-clan: "您已是某个部落的成员/所有者，无法创建新部落。"
     low-amount: "您需要 %amount% 才能创建一个部落！"
     name-taken: "部落名称已被占用。"
     save-clan: "保存部落时发生错误。"
+    banned-prefix: "抱歉！该前缀已被禁止，请尝试其他内容。"
+    no-space: "氏族名称不能包含空格。"
   success:
     created: "部落 %clan_name% 创建成功！"
   info:
@@ -26,6 +28,8 @@ clan:
     deposit: "用法：/clan deposit <amount>"
     withdrawal: "用法：/clan withdraw <amount>"
     bad-amount: "请输入一个有效的数字。"
+    delerror: "请输入要删除的部落名称。"
+    no-name: "用法：/clan change <new_prefix>。前缀可以使用颜色代码。"
   clan_help_descriptions:
     title: "| 部落帮助"
     top: "列出所有顶级部落的排名。"
@@ -51,6 +55,8 @@ clan:
     upgrade: "升级部落玩家人数上限。"
     pvp: "切换部落成员之间的PVP。"
     reload: "重新加载插件配置。"
+    delete: " - 删除部落及其相关数据。"
+    change: " - 更改部落前缀（可使用颜色代码）。"
 pvp:
   attacker-msg: "部落成员之间已禁用 PvP。"
   victim-msg: "%attacker% 尝试攻击您，但部落 PvP 已禁用。"
@@ -194,3 +200,15 @@ add:
   error: "将您添加到部落时发生错误。"
   alr-mem: "您已经是该部落的成员！"
   success: "您已加入部落 %clan_name%！"
+delete:
+  success: "部落 %clan_name% 已成功删除。"
+  error: "删除部落失败，请查看控制台错误。"
+  no-clan: "部落 %clan_name% 不存在。"
+  no-perm: "您没有删除部落的权限。"
+change_prefix:
+  no-clan: "你没有加入任何部落！"
+  leader-req: "只有部落的领导者可以更改前缀。"
+  name-taken: "部落名称已被使用，请尝试其他名称。"
+  no-try: "已达到更改部落名称的限制。"
+  success: "部落名称已从 %old_name% 更改为 %new_name%。"
+  error: "删除部落失败，请查看控制台错误。"

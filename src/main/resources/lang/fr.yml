@@ -1,11 +1,13 @@
 clan:
   general: "Créé chez Flubel par Fiend."
-  version: "Version : 1.3.0"
+  version: "Version : 1.4.0"
   error:
     already-in-clan: "Vous ne pouvez pas créer un nouveau clan tant que vous êtes membre/propriétaire d'un autre clan."
     low-amount: "Vous avez besoin de %amount% pour créer un clan !"
     name-taken: "Le nom du clan est déjà pris."
     save-clan: "Une erreur s'est produite lors de l'enregistrement du clan."
+    banned-prefix: "Désolé ! Ce préfixe est interdit, essayez autre chose."
+    no-space: "Le nom du clan ne peut pas contenir d'espaces."
   success:
     created: "Le clan %clan_name% a été créé avec succès !"
   info:
@@ -26,6 +28,8 @@ clan:
     deposit: "Utilisation : /clan deposit <amount>"
     withdrawal: "Utilisation : /clan withdraw <amount>"
     bad-amount: "Veuillez entrer un nombre valide."
+    delerror: "Entrez le nom d'un clan à supprimer."
+    no-name: "Utilisation : /clan change <new_prefix>. Les préfixes peuvent être colorés."
   clan_help_descriptions:
     title: "| Aide des Clans"
     top: "Lister les classements de tous les meilleurs clans."
@@ -51,6 +55,8 @@ clan:
     upgrade: "Améliorer la limite de membres du clan."
     pvp: "Basculer le PvP entre les membres du clan."
     reload: "Recharger la configuration du plugin."
+    delete: " - Supprime le clan et ses données associées."
+    change: " - Change le préfixe du clan (avec code couleur)."
 pvp:
   attacker-msg: "Le PvP est désactivé entre les membres du clan."
   victim-msg: "%attacker% a essayé de vous attaquer, mais le PvP du clan est désactivé."
@@ -194,3 +200,15 @@ add:
   error: "Une erreur s'est produite lors de votre ajout au clan."
   alr-mem: "Vous êtes déjà membre du clan !"
   success: "Vous avez rejoint le clan %clan_name% !"
+delete:
+  success: "Le clan %clan_name% a été supprimé avec succès."
+  error: "Échec de la suppression du clan, vérifiez la console pour les erreurs."
+  no-clan: "Le clan %clan_name% n'existe pas."
+  no-perm: "Vous n'avez pas la permission de supprimer les clans."
+change_prefix:
+  no-clan: "Vous n'êtes pas dans un clan !"
+  leader-req: "Seul le chef du clan peut changer le préfixe."
+  name-taken: "Le nom du clan est déjà pris. Essayez autre chose."
+  no-try: "Limite de changements de nom atteinte."
+  success: "Nom du clan changé de %old_name% à %new_name%."
+  error: "Échec de la suppression du clan, vérifiez la console pour les erreurs."

@@ -1,5 +1,5 @@
 name: Clans
-version: '${project.version}'
+version: '1.4'
 main: tech.flubel.clans.Clans
 api-version: 1.20
 authors: [ MrFiend179 ]
