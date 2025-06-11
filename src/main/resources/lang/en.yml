@@ -1,6 +1,6 @@
 clan:
   general: "Made at Flubel by Fiend."
-  version: "Version: 1.4.0"
+  version: "Version: 1.4.1"
   error:
     already-in-clan: "You cannot create a new clan while you are a member/owner of another clan."
     low-amount: "You need %amount% to create a clan!"

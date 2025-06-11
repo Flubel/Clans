@@ -1,6 +1,6 @@
 clan:
   general: "由 Fiend 在 Flubel 制作。"
-  version: "版本：1.4.0"
+  version: "版本：1.4.1"
   error:
     already-in-clan: "您已是某个部落的成员/所有者，无法创建新部落。"
     low-amount: "您需要 %amount% 才能创建一个部落！"

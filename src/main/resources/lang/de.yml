@@ -1,6 +1,6 @@
 clan:
   general: "Gemaakt bij Flubel door Fiend."
-  version: "Versie: 1.4.0"
+  version: "Versie: 1.4.1"
   error:
     already-in-clan: "Du kannst keinen neuen Clan erstellen, während du Mitglied oder Besitzer eines anderen Clans bist."
     low-amount: "Du benötigst %amount%, um einen Clan zu erstellen!"

@@ -1,6 +1,6 @@
 clan:
   general: "Flubel'de Fiend tarafından yapıldı."
-  version: "Sürüm: 1.4.0"
+  version: "Sürüm: 1.4.1"
   error:
     already-in-clan: "Zaten bir klana üyeyseniz veya lider iseniz, yeni bir klan oluşturamazsınız."
     low-amount: "Bir klan oluşturmak için %amount% gerekli!"
