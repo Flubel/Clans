@@ -1,11 +1,14 @@
 
 ![sssssssssssss_(18)-transformed](https://github.com/user-attachments/assets/a65852f8-a1e8-4612-948e-e545491fc643)
 
+![](https://img.shields.io/github/actions/workflow/status/Flubel/Clans/maven.yml?branch=master&style=for-the-badge&color=ff5555)
+![](https://img.shields.io/modrinth/dt/simple-clans?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=2ECC71)
+![](https://img.shields.io/spiget/downloads/123903?style=for-the-badge&logo=SpigotMC&color=E67E22&label=Spigot%20Downloads)
+![](https://img.shields.io/hangar/dt/Clans?style=for-the-badge&logo=Hangar&color=3498DB&label=Hangar%20Downloads)
+![](https://img.shields.io/github/downloads/Flubel/Clans/total?style=for-the-badge&logo=Github&color=95A5A6&label=Github%20Downloads)
+![](https://img.shields.io/bstats/players/25416?style=for-the-badge&logo=datadog&color=9B59B6&label=Active%20Players)
+![](https://img.shields.io/bstats/servers/25416?style=for-the-badge&logo=serverfault&color=F1C40F&label=Active%20Servers)
 
-![](https://img.shields.io/modrinth/dt/simple-clans?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=GREEN)
-![](https://img.shields.io/spiget/downloads/123903?style=for-the-badge&logo=SpigotMC&color=orange&label=Spigot%20Downloads)
-![](https://img.shields.io/hangar/dt/Clans?style=for-the-badge&logo=Hangar&color=blue&label=Hangar%20Downloads)
-![](https://img.shields.io/github/downloads/Flubel/Clans/total?style=for-the-badge&logo=Github&color=%23ccc&label=Github%20Downloads)
 
 The Clans Plugin is the ultimate tool for fostering teamwork and competition on your Minecraft server. With a rich set of features, players can create, manage, and grow their clans while competing for dominance. Whether you're building a community or running a competitive server, this plugin is designed to enhance the multiplayer experience.
 
@@ -50,4 +53,7 @@ These placeholders are available when using [PlaceholderAPI](https://www.spigotm
 ## Documentation
 Full setup guides and advanced usage can be found in the [Wiki](../../wiki).
 
+## Statistics
+The plugin stats can be found on [Bstats](https://bstats.org/plugin/bukkit/Simple%20Clans/25416)
 
+![](https://bstats.org/signatures/bukkit/Simple%20Clans.svg)
