@@ -57,6 +57,11 @@ clan:
     reload: "Herlaad de pluginconfiguratie."
     delete: " - Verwijdert de clan en gerelateerde gegevens."
     change: " - Wijzig het voorvoegsel van de clan (met kleurcodes)."
+    online: " - Zeigt alle online Clanmitglieder an."
+    getbanner: " - Gibt dem Clanmitglied seine Clan-Banner."
+    setbanner: " - Setzt das aktuell gehaltene Banner als Clan-Banner."
+    updater: " - Prüft online auf Plugin-Updates."
+    togglejoin: " - Schaltet den Empfang von Clan-Beitrittsanfragen ein/aus."
 pvp:
   attacker-msg: "PvP ist zwischen Clanmitgliedern deaktiviert."
   victim-msg: "%attacker% hat versucht, dich anzugreifen, aber Clan-PvP ist deaktiviert."

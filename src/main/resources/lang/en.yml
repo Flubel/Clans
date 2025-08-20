@@ -57,6 +57,11 @@ clan:
     reload: " - Reload the plugin configuration."
     delete: " - Deletes the Clan and its relevant data."
     change: " - Change the clans prefix (Color Coded)."
+    online: " - Shows all Online Clan Members."
+    getbanner: " - Gives the Clan Member Clan Banner."
+    setbanner: " - Sets the Clan banner as the banner being held."
+    updater: " - Checks online for plugin updates."
+    togglejoin: " - Toggles the Receiving Clan join requests for players."
 pvp:
   attacker-msg: "PvP is disabled between clan members."
   victim-msg: "%attacker% tried to attack you but clan pvp is disabled."
@@ -226,7 +231,7 @@ join_toggle:
   success: "Clan Join's via Invite has been %status%."
 updater:
   new-version: "A new version is available: "
-  current-version: "you are on"
+  current-version: "you are on: "
   latest-version: "You are at the latest version of this plugin!"
   failed-update-check: "Failed to check for updates"
 clan_banner:

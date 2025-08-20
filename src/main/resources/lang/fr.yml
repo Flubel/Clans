@@ -57,6 +57,11 @@ clan:
     reload: "Recharger la configuration du plugin."
     delete: " - Supprime le clan et ses données associées."
     change: " - Change le préfixe du clan (avec code couleur)."
+    online: " - Affiche tous les membres du clan en ligne."
+    getbanner: " - Donne au membre du clan son bannière de clan."
+    setbanner: " - Définit la bannière de clan comme celle tenue en main."
+    updater: " - Vérifie en ligne les mises à jour du plugin."
+    togglejoin: " - Active/désactive la réception des demandes de rejoindre le clan."
 pvp:
   attacker-msg: "Le PvP est désactivé entre les membres du clan."
   victim-msg: "%attacker% a essayé de vous attaquer, mais le PvP du clan est désactivé."

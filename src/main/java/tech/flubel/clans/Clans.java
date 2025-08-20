@@ -333,6 +333,7 @@ public final class Clans extends JavaPlugin implements Listener {
                 player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + languageManager.get("clan.clan_help_descriptions.title"));
                 player.sendMessage(ChatColor.YELLOW + "/clan top " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.top"));
                 player.sendMessage(ChatColor.YELLOW + "/clan create <name> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.create"));
+                player.sendMessage(ChatColor.YELLOW + "/clan join <name> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.join"));
                 player.sendMessage(ChatColor.GREEN + "/clan invite <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.invite"));
                 player.sendMessage(ChatColor.GREEN + "/clan accept " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.accept"));
                 player.sendMessage(ChatColor.GREEN + "/clan deny " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.deny"));
@@ -344,18 +345,22 @@ public final class Clans extends JavaPlugin implements Listener {
                 player.sendMessage(ChatColor.GREEN + "/clan kick <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.kick"));
                 player.sendMessage(ChatColor.GREEN + "/clan deposit <amount> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.deposit"));
                 player.sendMessage(ChatColor.GREEN + "/clan withdraw <amount> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.withdraw"));
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan transfer <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.transfer"));
-                player.sendMessage(ChatColor.YELLOW + "/clan join <name> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.join"));
                 player.sendMessage(ChatColor.GREEN + "/clan raccept <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.raccept"));
                 player.sendMessage(ChatColor.GREEN + "/clan rdeny <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.rdeny"));
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan sethome " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.sethome"));
-                player.sendMessage(ChatColor.DARK_GREEN + "/clan change <new_prefix> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.change"));
                 player.sendMessage(ChatColor.GREEN + "/clan home " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.home"));
+                player.sendMessage(ChatColor.GREEN + "/clan online " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.online"));
+                player.sendMessage(ChatColor.GREEN + "/clan getbanner " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.getbanner"));
                 player.sendMessage(ChatColor.GREEN + "/clan requests " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.requests"));
                 player.sendMessage(ChatColor.GREEN + "/clan upgrade " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.upgrade"));
                 player.sendMessage(ChatColor.DARK_GREEN + "/clan pvp " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.pvp"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan transfer <player> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.transfer"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan togglejoin " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.togglejoin"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan sethome " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.sethome"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan change <new_prefix> " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.change"));
+                player.sendMessage(ChatColor.DARK_GREEN + "/clan setbanner " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.setbanner"));
                 player.sendMessage(ChatColor.RED + "/clan reload " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.reload"));
                 player.sendMessage(ChatColor.RED + "/clan delete " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.delete"));
+                player.sendMessage(ChatColor.RED + "/clan updater " + ChatColor.WHITE + languageManager.get("clan.clan_help_descriptions.updater"));
                 return true;
             case "pinfo":
                 player.sendMessage(ChatColor.YELLOW + languageManager.get("clan.general"));

@@ -57,6 +57,11 @@ clan:
     reload: "重新加载插件配置。"
     delete: " - 删除部落及其相关数据。"
     change: " - 更改部落前缀（可使用颜色代码）。"
+    online: " - 显示所有在线的家族成员。"
+    getbanner: " - 给家族成员他们的家族旗帜。"
+    setbanner: " - 将手中持有的旗帜设置为家族旗帜。"
+    updater: " - 在线检查插件更新。"
+    togglejoin: " - 切换是否接收玩家的家族加入请求。"
 pvp:
   attacker-msg: "部落成员之间已禁用 PvP。"
   victim-msg: "%attacker% 尝试攻击您，但部落 PvP 已禁用。"

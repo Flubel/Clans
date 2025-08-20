@@ -57,6 +57,11 @@ clan:
     reload: "Eklenti yapılandırmasını yeniden yükle."
     delete: " - Klanı ve ilgili verileri siler."
     change: " - Klanın ön ekini değiştir (Renk Kodlu)."
+    online: " - Tüm çevrimiçi klan üyelerini gösterir."
+    getbanner: " - Klan üyesine klan bayrağını verir."
+    setbanner: " - Elde tutulan bayrağı klan bayrağı olarak ayarlar."
+    updater: " - Eklenti güncellemelerini çevrimiçi kontrol eder."
+    togglejoin: " - Oyuncuların klana katılma isteklerini almayı aç/kapat."
 pvp:
   attacker-msg: "Klan üyeleri arasında PvP devre dışı bırakıldı."
   victim-msg: "%attacker% sizi vurmaya çalıştı ama klan PvP'si kapalı."
