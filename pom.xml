@@ -6,7 +6,7 @@
 
     <groupId>tech.flubel</groupId>
     <artifactId>Clans</artifactId>
-    <version>1.4.1</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>Clans</name>
@@ -72,8 +72,8 @@
             <url>https://repo.essentialsx.net/releases/</url>
         </repository>
         <repository>
-            <id>paper-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>

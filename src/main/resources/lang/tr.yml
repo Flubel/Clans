@@ -1,6 +1,6 @@
 clan:
   general: "Flubel'de Fiend tarafından yapıldı."
-  version: "Sürüm: 1.4.1"
+  version: "Sürüm: 1.5.0"
   error:
     already-in-clan: "Zaten bir klana üyeyseniz veya lider iseniz, yeni bir klan oluşturamazsınız."
     low-amount: "Bir klan oluşturmak için %amount% gerekli!"
@@ -139,6 +139,7 @@ invite:
     no-req: "%player%, klanınıza katılmak istememiş."
     no-auth: "Yalnızca lider ve yardımcı lider istekleri kabul/ret edebilir."
     no-auth-any: "Herhangi bir klanın lideri veya yardımcı lideri değilsiniz."
+    clanmem: "%player%'ın klana katılma talebi %denier% tarafından reddedildi!"
   accept:
     no-clan: "Herhangi bir klanın lideri veya yardımcı lideri değilsiniz."
     no-req: "%player%'dan istek bulunamadı."
@@ -149,6 +150,7 @@ invite:
     error: "Davet kabul edilirken hata oluştu."
     success: "%player%'ın isteği kabul edildi."
     success-mem: "%clan_name% klanına başarıyla katıldınız!"
+    clanmem: "%player% klana katıldı! Talep %acceptor% tarafından kabul edildi."
 demote:
   no-clan: "Henüz bir klana katılmadınız!"
   no-exist: "Bu klan mevcut değil."
@@ -169,6 +171,7 @@ join:
   full: "Bu klan dolu."
   join-req: "%player%, klanınıza katılmak istiyor."
   success: "%clan_name% klanının liderine ve yardımcı liderlerine istek gönderildi."
+  joins_disabled: "Klan şu anda katılım taleplerini kabul etmiyor."
 home:
   no-clan: "Henüz bir klana katılmadınız!"
   no-auth: "Yalnızca lider ev konumunu ayarlayabilir."
@@ -212,3 +215,25 @@ change_prefix:
   no-try: "Klan adı değiştirme sınırına ulaşıldı."
   success: "Klan adı %old_name% olarak %new_name% şeklinde değiştirildi."
   error: "Klan silinemedi, hatalar için konsolu kontrol edin."
+online:
+  no-clan: "Bir klana üye değilsin!"
+  no-online: "Çevrimiçi klan üyesi yok."
+  title: "Çevrimiçi klan üyeleri:"
+join_toggle:
+  no-clan: "Bir klana üye değilsin!"
+  no-auth: "Sadece liderler klan katılımını değiştirebilir."
+  error: "Katılım durumu kaydedilirken hata oluştu."
+  success: "Davet ile klana katılım %status% oldu."
+updater:
+  new-version: "Yeni bir sürüm mevcut: "
+  current-version: "Şu anda"
+  latest-version: "Bu eklentinin en son sürümündesiniz!"
+  failed-update-check: "Güncellemeler kontrol edilemedi"
+clan_banner:
+  no-clan: "Bir klana üye değilsin!"
+  no-auth: "Sadece liderler klan katılımını değiştirebilir."
+  no-banner: "Klan bayrağı olarak ayarlamak için bir bayrak tutmalısın."
+  success: "Klan bayrağı ayarlandı!"
+  error: "Klan bayrağı kaydedilemedi."
+  not-available: "Klan bayrağı mevcut değil."
+  success-giver: "Klanının bayrağını aldın!"

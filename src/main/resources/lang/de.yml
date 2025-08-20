@@ -1,6 +1,6 @@
 clan:
   general: "Gemaakt bij Flubel door Fiend."
-  version: "Versie: 1.4.1"
+  version: "Versie: 1.5.0"
   error:
     already-in-clan: "Du kannst keinen neuen Clan erstellen, während du Mitglied oder Besitzer eines anderen Clans bist."
     low-amount: "Du benötigst %amount%, um einen Clan zu erstellen!"
@@ -139,6 +139,7 @@ invite:
     no-req: "%player% hat keine Beitrittsanfrage an deinen Clan gestellt."
     no-auth: "Nur Anführer und Co-Anführer können Beitrittsanfragen annehmen oder ablehnen."
     no-auth-any: "Du bist kein Anführer oder Co-Anführer eines Clans."
+    clanmem: "%player%s Anfrage, dem Clan beizutreten, wurde von %denier% abgelehnt!"
   accept:
     no-clan: "Du bist kein Anführer oder Co-Anführer eines Clans."
     no-req: "Keine Beitrittsanfrage von Spieler %player% gefunden."
@@ -149,6 +150,7 @@ invite:
     error: "Fehler beim Annehmen der Einladung."
     success: "Du hast %player%s Beitrittsanfrage zum Clan angenommen."
     success-mem: "Du wurdest in den Clan %clan_name% aufgenommen!"
+    clanmem: "%player% ist dem Clan beigetreten! Anfrage akzeptiert von %acceptor%."
 demote:
   no-clan: "Du bist in keinem Clan!"
   no-exist: "Clan existiert nicht."
@@ -169,6 +171,7 @@ join:
   full: "Clan ist voll."
   join-req: "%player% hat eine Beitrittsanfrage an deinen Clan gesendet."
   success: "Beitrittsanfrage wurde an den Anführer und die Co-Anführer des Clans %clan_name% gesendet."
+  joins_disabled: "Clan nimmt derzeit keine Beitrittsanfragen an."
 home:
   no-clan: "Du bist in keinem Clan!"
   no-auth: "Nur der Clanführer kann das Clan-Zuhause festlegen."
@@ -212,3 +215,25 @@ change_prefix:
   no-try: "Limiet voor wijzigen van clan naam bereikt."
   success: "Clan naam gewijzigd van %old_name% naar %new_name%."
   error: "Kan de clan niet verwijderen, controleer de console op fouten."
+online:
+  no-clan: "Du bist in keinem Clan!"
+  no-online: "Keine Clanmitglieder sind online."
+  title: "Online-Clanmitglieder:"
+join_toggle:
+  no-clan: "Du bist in keinem Clan!"
+  no-auth: "Nur Anführer können den Clan-Beitritt umschalten."
+  error: "Fehler beim Speichern des Beitrittsstatus."
+  success: "Clanbeitritt per Einladung wurde %status%."
+updater:
+  new-version: "Eine neue Version ist verfügbar: "
+  current-version: "Du benutzt"
+  latest-version: "Du hast die neueste Version dieses Plugins!"
+  failed-update-check: "Fehler beim Überprüfen auf Updates"
+clan_banner:
+  no-clan: "Du bist in keinem Clan!"
+  no-auth: "Nur Anführer können den Clan-Beitritt umschalten."
+  no-banner: "Du musst ein Banner halten, um es als Clanbanner zu setzen."
+  success: "Clanbanner wurde gesetzt!"
+  error: "Clanbanner konnte nicht gespeichert werden."
+  not-available: "Kein Clanbanner vorhanden."
+  success-giver: "Du hast das Banner deines Clans erhalten!"

@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import tech.flubel.clans.Clans;
 import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
@@ -13,20 +14,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClanPvPToggle {
-    private final JavaPlugin plugin;
+public class JoinToggler {
+    private final Clans plugin;
     private final LanguageManager languageManager;
 
-    public ClanPvPToggle(JavaPlugin plugin, LanguageManager languageManager) {
-        this.plugin = plugin;
+    public JoinToggler(JavaPlugin plugin, LanguageManager languageManager) {
+        this.plugin = (Clans) plugin;
         this.languageManager = languageManager;
     }
 
-    public void pvptoggler(Player player){
+
+    public void JoinTogglerFunc(Player player){
         String clanName = getClanName(player);
 
         if (clanName == null) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.no-clan"));
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join_toggle.no-clan"));
             return;
         }
 
@@ -35,17 +37,17 @@ public class ClanPvPToggle {
 
 
         if (!clansConfig.getString("clans." + clanName + ".leader").equals(player.getName())) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.no-auth"));
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join_toggle.no-auth"));
             return;
         }
-        boolean currentState = clansConfig.getBoolean("clans." + clanName + ".pvp", true);
+        boolean currentState = clansConfig.getBoolean("clans." + clanName + ".joins", true);
         boolean newState = !currentState;
-        clansConfig.set("clans." + clanName + ".pvp", newState);
+        clansConfig.set("clans." + clanName + ".joins", newState);
         try {
             clansConfig.save(clansFile);
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.error"));
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join_toggle.error"));
             return;
         }
 
@@ -56,12 +58,12 @@ public class ClanPvPToggle {
             if (member != null && member.isOnline()) {
                 Map<String, String> placeholders = new HashMap<>();
                 placeholders.put("status", status);
-                    if(status.equals("enabled")) {
-                        member.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("clan_pvp.success", placeholders));
-                    } else {
-                        member.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("clan_pvp.success", placeholders));
-                    }
+                if(status.equals("enabled")) {
+                    member.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + languageManager.get("join_toggle.success", placeholders));
+                } else {
+                    member.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("join_toggle.success", placeholders));
                 }
+            }
         }
 
     }
@@ -96,4 +98,5 @@ public class ClanPvPToggle {
 
         return members;
     }
+
 }

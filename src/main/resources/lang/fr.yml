@@ -1,6 +1,6 @@
 clan:
   general: "Créé chez Flubel par Fiend."
-  version: "Version : 1.4.1"
+  version: "Version : 1.5.0"
   error:
     already-in-clan: "Vous ne pouvez pas créer un nouveau clan tant que vous êtes membre/propriétaire d'un autre clan."
     low-amount: "Vous avez besoin de %amount% pour créer un clan !"
@@ -139,6 +139,7 @@ invite:
     no-req: "%player% n'a pas demandé à rejoindre votre clan."
     no-auth: "Seuls les chefs et co-chefs peuvent refuser ou accepter les demandes d'adhésion."
     no-auth-any: "Vous n'êtes pas chef ou co-chef d'un clan."
+    clanmem: "La demande de %player% pour rejoindre le clan a été refusée par %denier% !"
   accept:
     no-clan: "Vous n'êtes pas chef ou co-chef d'un clan."
     no-req: "Aucune demande d'adhésion trouvée de la part du joueur %player%."
@@ -149,6 +150,7 @@ invite:
     error: "Erreur lors de l'acceptation de l'invitation du joueur."
     success: "Vous avez accepté la demande d'adhésion de %player% au clan."
     success-mem: "Vous avez été accepté dans le clan %clan_name% !"
+    clanmem: "%player% a rejoint le clan ! Demande acceptée par %acceptor%."
 demote:
   no-clan: "Vous n'êtes pas dans un clan !"
   no-exist: "Le clan n'existe pas."
@@ -169,6 +171,7 @@ join:
   full: "Le clan est complet."
   join-req: "%player% a demandé à rejoindre votre clan."
   success: "Demande d'adhésion envoyée au chef et aux co-chefs du clan %clan_name%."
+  joins_disabled: "Le clan n'accepte pas de demandes d'adhésion."
 home:
   no-clan: "Vous n'êtes pas dans un clan !"
   no-auth: "Seul le chef du clan peut définir la maison du clan."
@@ -212,3 +215,25 @@ change_prefix:
   no-try: "Limite de changements de nom atteinte."
   success: "Nom du clan changé de %old_name% à %new_name%."
   error: "Échec de la suppression du clan, vérifiez la console pour les erreurs."
+online:
+  no-clan: "Vous n'êtes pas dans un clan !"
+  no-online: "Aucun membre du clan n'est en ligne."
+  title: "Membres du clan en ligne :"
+join_toggle:
+  no-clan: "Vous n'êtes pas dans un clan !"
+  no-auth: "Seuls les chefs peuvent basculer l'adhésion au clan."
+  error: "Erreur lors de l'enregistrement de l'état d'adhésion."
+  success: "L'adhésion au clan par invitation a été %status%."
+updater:
+  new-version: "Une nouvelle version est disponible : "
+  current-version: "Vous utilisez"
+  latest-version: "Vous avez la dernière version de ce plugin !"
+  failed-update-check: "Échec de la vérification des mises à jour"
+clan_banner:
+  no-clan: "Vous n'êtes pas dans un clan !"
+  no-auth: "Seuls les chefs peuvent basculer l'adhésion au clan."
+  no-banner: "Vous devez tenir une bannière pour la définir comme bannière du clan."
+  success: "La bannière du clan a été définie !"
+  error: "Échec de l'enregistrement de la bannière du clan."
+  not-available: "Aucune bannière de clan existante."
+  success-giver: "Vous avez reçu la bannière de votre clan !"

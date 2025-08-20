@@ -12,14 +12,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.flubel.clans.LanguageManager.LanguageManager;
 import tech.flubel.clans.Utils.*;
 import tech.flubel.clans.metrics.Metrics;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 public final class Clans extends JavaPlugin implements Listener {
@@ -32,6 +37,7 @@ public final class Clans extends JavaPlugin implements Listener {
         return languageManager;
     }
 
+    private String latestVersion = null;
     @Override
     public void onEnable() {
         if (!setupEconomy()) {
@@ -46,7 +52,6 @@ public final class Clans extends JavaPlugin implements Listener {
 
         this.getCommand("clan").setExecutor(this);
         this.getCommand("cc").setExecutor(this);
-        this.getCommand("clan").setTabCompleter(new ClanTabCompleter(this));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new ClanPlaceholderExpansion(this).register();
@@ -65,6 +70,14 @@ public final class Clans extends JavaPlugin implements Listener {
         saveLangFile("tr.yml");
 
 
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            latestVersion = checkForUpdate("https://api.spigotmc.org/legacy/update.php?resource=123903"); // replace with your URL
+            if (latestVersion != null && !getDescription().getVersion().equalsIgnoreCase(latestVersion)) {
+                getLogger().info("A new version is available: " + latestVersion);
+            }
+        });
+
+
         this.languageManager = new LanguageManager(this);
 
 
@@ -77,7 +90,7 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-        getLogger().info("\u001B[38;2;225;215;0m                 Version: 1.4.1               \u001B[0m");
+        getLogger().info("\u001B[38;2;225;215;0m                 Version: 1.5.0               \u001B[0m");
         getLogger().info("\u001B[38;2;0;255;0m                 Plugin Started               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
@@ -110,13 +123,41 @@ public final class Clans extends JavaPlugin implements Listener {
         getLogger().info("\u001B[38;2;23;138;214m   ╚██████╗███████╗██║  ██║██║ ╚████║███████║\u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m    ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝\u001B[0m");
         getLogger().info(" \u001B[0m");
-         getLogger().info("\u001B[38;2;225;215;0m                 Version: 1.4.1               \u001B[0m");
+         getLogger().info("\u001B[38;2;225;215;0m                 Version: 1.5.0               \u001B[0m");
            getLogger().info("\u001B[38;2;255;0;0m                 Plugin Stopped               \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m                (Made by Flubel)              \u001B[0m");
         getLogger().info(" \u001B[0m");
         getLogger().info("\u001B[38;2;23;138;214m================================================\u001B[0m");
     }
+
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (player.isOp() && latestVersion != null) {
+            String current = getDescription().getVersion();
+            if (!current.equalsIgnoreCase(latestVersion)) {
+                player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| [Clans] " + ChatColor.YELLOW + "A new version is available: " + latestVersion + " (you are on " + current + ")");
+            }
+        }
+    }
+
+    private String checkForUpdate(String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String version = reader.readLine().trim();
+            reader.close();
+            return version;
+        } catch (Exception e) {
+            getLogger().warning(languageManager.get("updater.failed-update-check") + ": " + e.getMessage());
+            return null;
+        }
+    }
+
 
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -385,10 +426,59 @@ public final class Clans extends JavaPlugin implements Listener {
                     throw new RuntimeException(e);
                 }
                 return true;
+            case "online":
+                ClanOnline clanOnline = new ClanOnline(this, this.languageManager);
+                clanOnline.FetchOnlineMembers(player);
+                return true;
+            case "togglejoin":
+                JoinToggler joinToggler = new JoinToggler(this, this.languageManager);
+                joinToggler.JoinTogglerFunc(player);
+                return true;
+            case "updater":
+                if (player.hasPermission("clans.admin") && latestVersion != null) {
+                    String current = getDescription().getVersion();
+                    if (!current.equalsIgnoreCase(latestVersion)) {
+                        player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| [Clans] " + ChatColor.YELLOW + languageManager.get("updater.new-version") + latestVersion + " (" + languageManager.get("updater.current-version") + current + ")");
+                    }
+                }else {
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "| [Clans] " + ChatColor.YELLOW + languageManager.get("updater.latest-version"));
+                }
+                return true;
+            case "setbanner":
+                SetBanner setBanner = new SetBanner(this, this.languageManager);
+                setBanner.SetClanBanner(player);
+                return true;
+            case "getbanner":
+                SetBanner setBanner1 = new SetBanner(this, this.languageManager);
+                setBanner1.getClanBanner(player);
+                return true;
+
         }
 
 
         return true;
+    }
+
+
+
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("clan")) {
+            if (args.length == 1) {
+                List<String> suggestions = new ArrayList<>();
+                String input = args[0].toLowerCase();
+
+                List<String> subCommands = Arrays.asList("setbanner", "getbanner", "togglejoin","online", "updater", "chat", "top", "create", "invite", "accept", "deny", "info", "leave", "promote", "demote", "kick", "transfer", "join", "raccept", "rdeny", "sethome", "home", "requests", "reload", "upgrade", "help", "pinfo", "deposit", "withdraw", "pvp", "balance", "delete", "change");
+                for (String subCommand : subCommands) {
+                    if (subCommand.startsWith(input)) {
+                        suggestions.add(subCommand);
+                    }
+                }
+                return suggestions;
+            }
+        }
+        return null;
     }
 
 
@@ -498,6 +588,7 @@ public final class Clans extends JavaPlugin implements Listener {
         clansConfig.set("clans." + cleanedClanName + ".members", new ArrayList<>());
         clansConfig.set("clans." + cleanedClanName + ".prefix", clanName);
         clansConfig.set("clans." + cleanedClanName + ".pvp", true);
+        clansConfig.set("clans." + cleanedClanName + ".joins", true);
         clansConfig.set("clans." + cleanedClanName + ".balance", this.getConfig().getInt("initial_balance",25000));
         clansConfig.set("clans." + cleanedClanName + ".max_members", this.getConfig().getInt("max_members",50));
         clansConfig.set("clans." + cleanedClanName + ".prefix_change", this.getConfig().getInt("prefix_change",1));

@@ -1,6 +1,6 @@
 clan:
   general: "Made at Flubel by Fiend."
-  version: "Version: 1.4.1"
+  version: "Version: 1.5.0"
   error:
     already-in-clan: "You cannot create a new clan while you are a member/owner of another clan."
     low-amount: "You need %amount% to create a clan!"
@@ -139,6 +139,7 @@ invite:
     no-req:  "%player% has not requested to join your clan."
     no-auth: "Only Leaders and Co-Leaders can Deny or Accept join requests."
     no-auth-any: "You are not a leader or co-leader of any clan."
+    clanmem: "%player%'s request to join the clan denied by %denier%!"
   accept:
     no-clan: "You are not Leader or Co-Leader of any Clan."
     no-req: "No join request found from player %player%."
@@ -149,6 +150,7 @@ invite:
     error: "Error accepting Players invite."
     success: "You accepted %player%'s request to join the clan."
     success-mem: "You have been accepted into the clan %clan_name%!"
+    clanmem: "%player% has Joined the clan! Request Accepted by %acceptor%"
 demote:
   no-clan: "You are not in a clan!"
   no-exist: "Clan does not exist."
@@ -162,13 +164,14 @@ clan_pvp:
   no-clan: "You are not in a clan!"
   no-auth: "Only Leaders can toggle pvp between clan mates."
   error: "Error saving PvP toggle state."
-  success: "Clan PvP has been %status% by your leader."
+  success: "Clan PvP has been %status%."
 join:
   no-clan: "No such Clan exists."
   already-member: "You are already in a clan."
   full: "Clan is Full."
   join-req: "%player% has requested to join your Clan."
   success: "Join request sent to the clan %clan_name%'s Leader and Co-Leaders."
+  joins_disabled: "Clan is not accepting join requests."
 home:
   no-clan: "You are not in a clan!"
   no-auth: "Only the Clan Leader can set the clan home."
@@ -212,3 +215,25 @@ change_prefix:
   no-try: "Limit for clan's name change reached."
   success: "Clan name changed from %old_name% to %new_name%."
   error: "Failed to delete clan, check console for errors."
+online:
+  no-clan: "You are not in a clan!"
+  no-online: "No clan members are online."
+  title: "Online clan members:"
+join_toggle:
+  no-clan: "You are not in a clan!"
+  no-auth: "Only Leaders can toggle Clan join's."
+  error: "Error saving Join toggle state."
+  success: "Clan Join's via Invite has been %status%."
+updater:
+  new-version: "A new version is available: "
+  current-version: "you are on"
+  latest-version: "You are at the latest version of this plugin!"
+  failed-update-check: "Failed to check for updates"
+clan_banner:
+  no-clan: "You are not in a clan!"
+  no-auth: "Only Leaders can toggle Clan join's."
+  no-banner: "You must hold a banner to set it as your clan banner."
+  success: "Clan banner has been set!"
+  error: "Failed to save clan banner."
+  not-available: "No Clan Banner Exists."
+  success-giver: "You received your clan's banner!"

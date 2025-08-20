@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,21 @@ public class DenyJoinReq {
                         target.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.denied-msg", placeholders1));
                     }
 
+
+                    List<String> clanMembers = getClanMembers(clanName);
+
+                    for (String memberName : clanMembers) {
+                        Player member = Bukkit.getPlayer(memberName);
+                        if (member != null && member.isOnline()) {
+
+                            Map<String, String> placeholders2 = new HashMap<>();
+                            placeholders2.put("player", target.getName());
+                            placeholders2.put("denier", denier.getName());
+
+                            member.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("invite.deny.clanmem", placeholders2));
+                        }
+                    }
+
                     return;
                 } else {
                     Map<String, String> placeholders = new HashMap<>();
@@ -87,5 +103,29 @@ public class DenyJoinReq {
         }
 
         denier.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "| " + ChatColor.RED + languageManager.get("invite.deny.no-auth-any"));
+
+
+
+
     }
+
+    private List<String> getClanMembers(String clanName) {
+        List<String> members = new ArrayList<>();
+        File clansFile = new File(plugin.getDataFolder(), "clans.yml");
+        FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
+
+        if (clansConfig.contains("clans." + clanName + ".members")) {
+            members.addAll(clansConfig.getStringList("clans." + clanName + ".members"));
+        }
+        if (clansConfig.contains("clans." + clanName + ".leader")) {
+            members.add(clansConfig.getString("clans." + clanName + ".leader"));
+        }
+        if (clansConfig.contains("clans." + clanName + ".co_leader")) {
+            members.addAll(clansConfig.getStringList("clans." + clanName + ".co_leader"));
+        }
+
+        return members;
+    }
+
+
 }

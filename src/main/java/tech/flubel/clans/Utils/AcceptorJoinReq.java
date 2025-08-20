@@ -11,6 +11,7 @@ import tech.flubel.clans.LanguageManager.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,5 +134,41 @@ public class AcceptorJoinReq {
 
 
         targetPlayer.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.GREEN + message);
+
+
+
+        List<String> clanMembers = getClanMembers(targetClan);
+
+        for (String memberName : clanMembers) {
+            Player member = Bukkit.getPlayer(memberName);
+            if (member != null && member.isOnline()) {
+
+                Map<String, String> placeholders2 = new HashMap<>();
+                placeholders2.put("player", targetPlayer.getName());
+                placeholders2.put("acceptor", staff.getName());
+
+                member.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "| " + ChatColor.YELLOW + languageManager.get("invite.accept.clanmem", placeholders2));
+            }
+        }
+    }
+
+
+
+    private List<String> getClanMembers(String clanName) {
+        List<String> members = new ArrayList<>();
+        File clansFile = new File(plugin.getDataFolder(), "clans.yml");
+        FileConfiguration clansConfig = YamlConfiguration.loadConfiguration(clansFile);
+
+        if (clansConfig.contains("clans." + clanName + ".members")) {
+            members.addAll(clansConfig.getStringList("clans." + clanName + ".members"));
+        }
+        if (clansConfig.contains("clans." + clanName + ".leader")) {
+            members.add(clansConfig.getString("clans." + clanName + ".leader"));
+        }
+        if (clansConfig.contains("clans." + clanName + ".co_leader")) {
+            members.addAll(clansConfig.getStringList("clans." + clanName + ".co_leader"));
+        }
+
+        return members;
     }
 }

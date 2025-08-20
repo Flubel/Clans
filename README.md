@@ -1,42 +1,53 @@
 
 ![sssssssssssss_(18)-transformed](https://github.com/user-attachments/assets/a65852f8-a1e8-4612-948e-e545491fc643)
 
-## Build Instructions
 
-To build the plugin from source, use one of the following methods:
+![](https://img.shields.io/modrinth/dt/simple-clans?style=for-the-badge&logo=modrinth&label=Modrinth%20Downloads&color=GREEN)
+![](https://img.shields.io/spiget/downloads/123903?style=for-the-badge&logo=SpigotMC&color=orange&label=Spigot%20Downloads)
+![](https://img.shields.io/hangar/dt/Clans?style=for-the-badge&logo=Hangar&color=blue&label=Hangar%20Downloads)
+![](https://img.shields.io/github/downloads/Flubel/Clans/total?style=for-the-badge&logo=Github&color=%23ccc&label=Github%20Downloads)
 
-### Option 1: Using Maven
+The Clans Plugin is the ultimate tool for fostering teamwork and competition on your Minecraft server. With a rich set of features, players can create, manage, and grow their clans while competing for dominance. Whether you're building a community or running a competitive server, this plugin is designed to enhance the multiplayer experience.
 
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/Flubel/Clans.git  
-   cd Clans
-   ```
+## Features
+1. **Clan Creation**: Players can create clans with unique names and prefixes.
+2. **Clan Management**:
+   - Invite, promote, demote, or kick members.
+   - Transfer leadership to other members.
+3. **Clan Chat**: Communicate privately with your clan using /cc or /clan chat.
+4. **Clan Home**:
+   - Set a home location for your clan.
+   - Teleport to the clan home anytime.
+5. **Clan Banner**: Set a clan Banner to assert Land Dominance.
+6. **Clan Upgrades**: Expand your clan's player slots with upgrades.
+7. **Join Requests**:
+   - Send requests to join clans.
+   - Accept or deny join requests as a leader.
+   - Toggle Clan Join status.
+8. **Economy Integration**: Requires Vault to manage clan creation costs and upgrades.
+9. **PlaceholderAPI Support**: Display clan-related placeholders anywhere on your server.
+10. **Highly Configurable**: Customize settings like clan creation costs, max members, and more.
+11. **Multi-Language Support**: Plugin supports upto 6 languages that are en, fr, dt, ru, tr, cn.
 
-2. Build the plugin:  
-   ```
-   mvn clean install
-   ```
+## Placeholders
+These placeholders are available when using [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/):
 
-4. The compiled `.jar` file will be located in the `target/` directory.
-
----
-
-### Option 2: Using IntelliJ IDEA
-
-1. Open the project in **IntelliJ IDEA**.
-2. Allow IntelliJ to import the Maven dependencies automatically.
-3. Use the built-in **Run** or **Build** options to compile the plugin.
-
----
-
-✅ Once built, you can place the generated JAR into your server's `plugins/` folder and start the server.
+- `%clans_name%` → Shows the player's clan name
+- `%clans_badge%` → Shows the player's clan badge
+- `%clans_list_<#>_name%` → Shows the name of the clan at that position in the leaderboard
+- `%clans_list_<#>_leader%` → Shows the leader of the clan at that position
+- `%clans_list_<#>_balance%` → Shows the balance of the clan at that position
 
 
-## Wiki
-To learn more about the plugin visit the repository's wiki.
+## Installation
+1. Download the latest release from:
+   - [SpigotMC](https://www.spigotmc.org/resources/clans.123903/)
+   - [Modrinth](https://modrinth.com/plugin/simple-clans)
+   - [Hangar](https://hangar.papermc.io/MrFiend/Clans)
+2. Place the `.jar` file into your server’s `plugins/` folder.
+3. Restart your server.
 
-# Downloads
-* [SpigotMc](https://www.spigotmc.org/resources/clans.123903/)
-* [Mondrith](https://modrinth.com/plugin/simple-clans)
-* [Hangar](https://hangar.papermc.io/MrFiend/Clans)
+## Documentation
+Full setup guides and advanced usage can be found in the [Wiki](../../wiki).
+
+

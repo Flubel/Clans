@@ -1,6 +1,6 @@
 clan:
   general: "由 Fiend 在 Flubel 制作。"
-  version: "版本：1.4.1"
+  version: "版本：1.5.0"
   error:
     already-in-clan: "您已是某个部落的成员/所有者，无法创建新部落。"
     low-amount: "您需要 %amount% 才能创建一个部落！"
@@ -139,6 +139,7 @@ invite:
     no-req: "%player% 并未请求加入您的部落。"
     no-auth: "只有领袖和副领袖可以接受或拒绝加入请求。"
     no-auth-any: "您不是任何部落的领袖或副领袖。"
+    clanmem: "%player% 加入公会的请求被 %denier% 拒绝！"
   accept:
     no-clan: "您不是任何部落的领袖或副领袖。"
     no-req: "未找到 %player% 的加入请求。"
@@ -149,6 +150,7 @@ invite:
     error: "接受邀请时发生错误。"
     success: "您已接受 %player% 的加入请求。"
     success-mem: "您已成功加入部落 %clan_name%！"
+    clanmem: "%player% 已加入公会！请求已被 %acceptor% 接受。"
 demote:
   no-clan: "您还没有加入任何部落！"
   no-exist: "该部落不存在。"
@@ -169,6 +171,7 @@ join:
   full: "该部落人数已满。"
   join-req: "%player% 请求加入您的部落。"
   success: "您已向部落 %clan_name% 的领袖和副领袖发送了加入请求。"
+  joins_disabled: "公会当前不接受加入请求。"
 home:
   no-clan: "您还没有加入任何部落！"
   no-auth: "只有部落领袖可以设置家园位置。"
@@ -212,3 +215,25 @@ change_prefix:
   no-try: "已达到更改部落名称的限制。"
   success: "部落名称已从 %old_name% 更改为 %new_name%。"
   error: "删除部落失败，请查看控制台错误。"
+online:
+  no-clan: "你不在任何公会中！"
+  no-online: "没有公会成员在线。"
+  title: "在线的公会成员："
+join_toggle:
+  no-clan: "你不在任何公会中！"
+  no-auth: "只有领袖可以切换公会加入方式。"
+  error: "保存加入状态时出错。"
+  success: "通过邀请加入公会已%status%。"
+updater:
+  new-version: "有新版本可用："
+  current-version: "你正在使用"
+  latest-version: "你已在使用该插件的最新版本！"
+  failed-update-check: "检查更新失败"
+clan_banner:
+  no-clan: "你不在任何公会中！"
+  no-auth: "只有领袖可以切换公会加入方式。"
+  no-banner: "你必须手持旗帜才能将其设为公会旗帜。"
+  success: "公会旗帜已设置！"
+  error: "保存公会旗帜失败。"
+  not-available: "没有公会旗帜。"
+  success-giver: "你收到了你公会的旗帜！"
